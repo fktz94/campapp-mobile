@@ -1,4 +1,4 @@
-import { CamionPayload, DatosIniciales, OrdenPayload } from './types'
+import { CamionPayload, DatosInicialesSchema, OrdenPayload } from './schemas'
 
 const APPS_SCRIPT_URL = 'YOUR_DEPLOYMENT_URL'
 
@@ -13,7 +13,10 @@ async function call<T>(action: string, params?: unknown): Promise<T> {
 }
 
 export const api = {
-  getDatosIniciales: () => call<DatosIniciales>('getDatosIniciales'),
+  getDatosIniciales: async () => {
+    const raw = await call<unknown>('getDatosIniciales')
+    return DatosInicialesSchema.parse(raw)
+  },
   guardarOrden: (orden: OrdenPayload) => call('guardarOrden', orden),
   guardarCamion: (datos: CamionPayload) => call('guardarCamion', datos),
   getDatosVisualizador: (campaña: string, establecimiento: string, lote: string) =>
