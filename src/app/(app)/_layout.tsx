@@ -1,4 +1,4 @@
-import { Link, Redirect, Stack, useSegments } from 'expo-router'
+import { Redirect, router, Stack, useSegments } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import SettingsPressable from '@/components/ui/SettingsPressable'
@@ -20,9 +20,11 @@ export default function AppLayout() {
         headerRight: isSettings
           ? undefined
           : ({ tintColor }) => (
-              <Link href="/settings" asChild>
-                <SettingsPressable color={tintColor} size={22} />
-              </Link>
+              <SettingsPressable
+                color={tintColor}
+                size={22}
+                onPress={() => router.push('/settings')}
+              />
             ),
         contentStyle: { paddingBottom: bottom },
         headerBackButtonDisplayMode: 'minimal',
