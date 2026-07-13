@@ -1,5 +1,6 @@
-import { colors, font, spacing } from '@/constants/theme'
 import { StyleSheet, Text } from 'react-native'
+
+import { colors, font, spacing } from '@/constants/theme'
 
 export function Label({ children }: { children: string }) {
   return <Text style={s.text}>{children}</Text>

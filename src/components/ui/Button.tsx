@@ -1,5 +1,6 @@
-import { colors, font, radius, spacing } from '@/constants/theme'
 import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native'
+
+import { colors, font, radius, spacing } from '@/constants/theme'
 
 interface Props {
   label: string

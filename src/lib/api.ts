@@ -1,13 +1,18 @@
-import { CamionPayload, DatosInicialesSchema, OrdenPayload } from './schemas'
+import { auth } from '@/lib/firebaseAuth'
+import type { CamionPayload, OrdenPayload } from './schemas'
+import { DatosInicialesSchema } from './schemas'
 
-const APPS_SCRIPT_URL = 'YOUR_DEPLOYMENT_URL'
+const APPS_SCRIPT_URL = process.env.EXPO_PUBLIC_API_URL!
 
 async function call<T>(action: string, params?: unknown): Promise<T> {
+  const token = await auth.currentUser?.getIdToken()
   const res = await fetch(APPS_SCRIPT_URL, {
     method: 'POST',
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
     body: JSON.stringify({ action, params }),
   })
   const data = await res.json()
+  console.log(`[api] ${action}`, data)
   if (!data.ok) throw new Error(data.error ?? 'Unknown error')
   return data as T
 }

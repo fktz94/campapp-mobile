@@ -1,3 +1,6 @@
+import { useQuery } from '@tanstack/react-query'
+import { ScrollView, StyleSheet, Text, View } from 'react-native'
+
 import { Button } from '@/components/ui/Button'
 import { ChipSelect } from '@/components/ui/ChipSelect'
 import { DateField } from '@/components/ui/DateField'
@@ -5,10 +8,8 @@ import { FieldInput } from '@/components/ui/FieldInput'
 import { Label } from '@/components/ui/Label'
 import { SectionTitle } from '@/components/ui/SectionTitle'
 import { colors, spacing } from '@/constants/theme'
+import { useOrdenForm } from '@/hooks/useOrdenForm'
 import { api } from '@/lib/api'
-import { useQuery } from '@tanstack/react-query'
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
-import { useOrdenForm } from '../../hooks/useOrdenForm'
 
 export default function NuevaLaborScreen() {
   const { data } = useQuery({

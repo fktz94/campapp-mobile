@@ -1,5 +1,6 @@
-import { colors, font, radius, spacing } from '@/constants/theme'
 import { StyleSheet, Text, TextInput, TextInputProps, View } from 'react-native'
+
+import { colors, font, radius, spacing } from '@/constants/theme'
 
 interface Props extends TextInputProps {
   label: string

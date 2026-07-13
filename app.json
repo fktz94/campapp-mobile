@@ -1,14 +1,16 @@
 {
   "expo": {
     "name": "CampApp",
-    "slug": "CampApp",
-    "version": "1.0.0",
+    "slug": "campapp",
+    "version": "0.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "campapp",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/expo.icon",
+      "bundleIdentifier": "com.ortiz.campapp",
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
@@ -17,13 +19,22 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
-    },
-    "web": {
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "package": "com.ortiz.campapp",
+      "predictiveBackGestureEnabled": false,
+      "googleServicesFile": "./google-services.json"
     },
     "plugins": [
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static",
+            "forceStaticLinking": ["RNFBApp", "RNFBAuth"]
+          }
+        }
+      ],
       "expo-router",
       [
         "expo-splash-screen",
@@ -34,11 +45,24 @@
             "imageWidth": 76
           }
         }
+      ],
+      [
+        "react-native-nitro-google-signin",
+        {
+          "iosGoogleServicesFile": "./GoogleService-Info.plist",
+          "androidGoogleServicesFile": "./google-services.json"
+        }
       ]
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "dafc3fe0-b439-4c84-9cd0-4881f7dafdab"
+      }
     }
   }
 }
