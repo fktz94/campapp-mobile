@@ -19,7 +19,10 @@ export default function RootLayout() {
   const { hydrated } = useAppStore()
 
   useEffect(() => {
-    GoogleOneTapSignIn.configure({ webClientId: WEB_CLIENT_ID })
+    GoogleOneTapSignIn.configure({
+      webClientId: WEB_CLIENT_ID,
+      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+    })
   }, [])
 
   useEffect(() => {
