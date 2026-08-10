@@ -1,11 +1,12 @@
-import { useAuthSync } from '@/hooks/useAuthSync'
-import { useAppStore } from '@/store/app'
+import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Stack } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { useEffect } from 'react'
 import { StatusBar } from 'react-native'
-import { GoogleOneTapSignIn } from 'react-native-nitro-google-signin'
+
+import { useAuthSync } from '@/hooks/useAuthSync'
+import { useAppStore } from '@/store/app'
 
 const WEB_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID ?? ''
 
@@ -19,7 +20,7 @@ export default function RootLayout() {
   const { hydrated } = useAppStore()
 
   useEffect(() => {
-    GoogleOneTapSignIn.configure({
+    GoogleSignin.configure({
       webClientId: WEB_CLIENT_ID,
       scopes: ['https://www.googleapis.com/auth/spreadsheets'],
     })

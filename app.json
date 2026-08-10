@@ -26,6 +26,7 @@
     "plugins": [
       "@react-native-firebase/app",
       "@react-native-firebase/auth",
+      "@react-native-google-signin/google-signin",
       [
         "expo-build-properties",
         {
@@ -44,13 +45,6 @@
             "image": "./assets/images/splash-icon.png",
             "imageWidth": 76
           }
-        }
-      ],
-      [
-        "react-native-nitro-google-signin",
-        {
-          "iosGoogleServicesFile": "./GoogleService-Info.plist",
-          "androidGoogleServicesFile": "./google-services.json"
         }
       ]
     ],

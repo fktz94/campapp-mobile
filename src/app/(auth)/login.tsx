@@ -1,5 +1,5 @@
+import { GoogleSigninButton } from '@react-native-google-signin/google-signin'
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
-import { GOOGLE_SIGN_IN_BUTTON_HEIGHT, GoogleSignInButton } from 'react-native-nitro-google-signin'
 
 import { Screen } from '@/components/ui/Screen'
 import { common } from '@/constants/commonStyles'
@@ -7,7 +7,7 @@ import { colors } from '@/constants/theme'
 import useAuth from '@/hooks/useAuth'
 
 const Login = () => {
-  const { handleGoogleSignInSuccess, handleGoogleSignInError, isSigningIn } = useAuth()
+  const { signIn, isSigningIn } = useAuth()
 
   return (
     <>
@@ -18,15 +18,7 @@ const Login = () => {
       )}
       <Screen centered>
         <Text style={common.title}>CampApp</Text>
-        <GoogleSignInButton
-          style={{ width: 320, height: GOOGLE_SIGN_IN_BUTTON_HEIGHT }}
-          colorScheme="light"
-          disabled={false}
-          size="standard"
-          signInBehavior="credentialManager"
-          onSignInSuccess={({ idToken }) => handleGoogleSignInSuccess({ idToken })}
-          onSignInError={handleGoogleSignInError}
-        />
+        <GoogleSigninButton onPress={signIn} />
       </Screen>
     </>
   )

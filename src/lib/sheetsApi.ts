@@ -1,11 +1,15 @@
-import { GoogleOneTapSignIn, isErrorWithCode, statusCodes } from 'react-native-nitro-google-signin'
+import {
+  GoogleSignin,
+  isErrorWithCode,
+  statusCodes,
+} from '@react-native-google-signin/google-signin'
 
 const SPREADSHEET_ID = process.env.EXPO_PUBLIC_SPREADSHEET_ID!
 const BASE = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}`
 
 async function getAccessToken(): Promise<string> {
   try {
-    const { accessToken } = await GoogleOneTapSignIn.getTokens()
+    const { accessToken } = await GoogleSignin.getTokens()
     return accessToken
   } catch (e) {
     if (isErrorWithCode(e) && e.code === statusCodes.SIGN_IN_REQUIRED) {
