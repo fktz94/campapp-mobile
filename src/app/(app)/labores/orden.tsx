@@ -9,12 +9,12 @@ import { Label } from '@/components/ui/Label'
 import { SectionTitle } from '@/components/ui/SectionTitle'
 import { colors, spacing } from '@/constants/theme'
 import { useOrdenForm } from '@/hooks/useOrdenForm'
-import { api } from '@/lib/api'
+import { getDatosIniciales } from '@/lib/sheetsService'
 
 export default function NuevaLaborScreen() {
   const { data } = useQuery({
     queryKey: ['datosIniciales'],
-    queryFn: api.getDatosIniciales,
+    queryFn: getDatosIniciales,
     staleTime: 600_000,
   })
   const f = useOrdenForm(data)

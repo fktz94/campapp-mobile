@@ -7,7 +7,8 @@ import { ChipSelect } from '@/components/ui/ChipSelect'
 import { Label } from '@/components/ui/Label'
 import { Screen } from '@/components/ui/Screen'
 import { colors } from '@/constants/theme'
-import { api } from '@/lib/api'
+import { sheetsApi } from '@/lib/sheetsApi'
+import { getDatosIniciales } from '@/lib/sheetsService'
 import { useAppStore } from '@/store/app'
 
 export default function HomeScreen() {
@@ -15,7 +16,7 @@ export default function HomeScreen() {
 
   const { data, isLoading } = useQuery({
     queryKey: ['datosIniciales'],
-    queryFn: api.getDatosIniciales,
+    queryFn: getDatosIniciales,
     enabled: !!user,
     staleTime: 1000 * 60 * 10,
   })
@@ -29,6 +30,17 @@ export default function HomeScreen() {
 
   return (
     <Screen>
+      <Button
+        label="Test Sheets"
+        onPress={async () => {
+          try {
+            const result = await sheetsApi.get<any>('Listas!A1:C5')
+            console.log('RAW RESULT:', JSON.stringify(result, null, 2))
+          } catch (e: any) {
+            console.log('ERROR:', e.message)
+          }
+        }}
+      />
       <Label>Campaña</Label>
       <ChipSelect options={data?.campanias ?? []} value={campania ?? ''} onChange={setCampania} />
 

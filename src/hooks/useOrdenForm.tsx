@@ -1,4 +1,4 @@
-import { api } from '@/lib/api'
+import { guardarOrden } from '@/lib/sheetsService'
 import type { DatosIniciales, LoteOrden, ProductoLinea } from '@/lib/schemas'
 import { useAppStore } from '@/store/app'
 import { useMutation } from '@tanstack/react-query'
@@ -72,7 +72,7 @@ export function useOrdenForm(data: DatosIniciales | undefined) {
   }
 
   const mutation = useMutation({
-    mutationFn: api.guardarOrden,
+    mutationFn: guardarOrden,
     onSuccess: () => {
       Alert.alert('✅ Guardado')
       router.back()
