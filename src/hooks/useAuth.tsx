@@ -1,55 +1,45 @@
 import { GoogleSignin, isSuccessResponse } from '@react-native-google-signin/google-signin'
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 
 import { formatGoogleSignInError } from '@/constants/authErrors'
-import { auth, GoogleAuthProvider, signInWithCredential, signOut } from '@/lib/firebaseAuth'
+import { forceFullSignOut } from '@/lib/authOrchestation'
+import { auth, GoogleAuthProvider, signInWithCredential } from '@/lib/firebaseAuth'
 import { useAppStore } from '@/store/app'
 
 const useAuth = () => {
   const setAuthError = useAppStore((s) => s.setAuthError)
-  const [isSigningIn, setIsSigningIn] = useState(false)
-
-  const exchangeGoogleToken = useCallback(async (idToken: string) => {
-    const credential = GoogleAuthProvider.credential(idToken)
-    await signInWithCredential(auth, credential)
-  }, [])
+  const setIsAuthenticating = useAppStore((s) => s.setIsAuthenticating)
 
   const signIn = useCallback(async () => {
     try {
-      setIsSigningIn(true)
+      setIsAuthenticating(true)
       await GoogleSignin.hasPlayServices()
       const response = await GoogleSignin.signIn()
-
       if (isSuccessResponse(response)) {
         const idToken = response.data.idToken
         if (!idToken) {
           throw new Error('No ID token returned from Google Sign-In.')
         }
-        await exchangeGoogleToken(idToken)
+        const credential = GoogleAuthProvider.credential(idToken)
+        await signInWithCredential(auth, credential)
         setAuthError(null)
       }
     } catch (error) {
-      console.error('google sign in', error)
       setAuthError(formatGoogleSignInError(error))
     } finally {
-      setIsSigningIn(false)
+      setIsAuthenticating(false)
     }
-  }, [exchangeGoogleToken, setAuthError])
+  }, [setAuthError, setIsAuthenticating])
 
   const signOutUser = useCallback(async () => {
     try {
-      await signOut(auth)
+      await forceFullSignOut()
     } finally {
-      await GoogleSignin.signOut()
       setAuthError(null)
     }
   }, [setAuthError])
 
-  return {
-    signIn,
-    isSigningIn,
-    signOut: signOutUser,
-  }
+  return { signIn, signOut: signOutUser }
 }
 
 export default useAuth

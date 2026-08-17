@@ -5,13 +5,15 @@ import { Screen } from '@/components/ui/Screen'
 import { common } from '@/constants/commonStyles'
 import { colors } from '@/constants/theme'
 import useAuth from '@/hooks/useAuth'
+import { useAppStore } from '@/store/app'
 
 const Login = () => {
-  const { signIn, isSigningIn } = useAuth()
+  const { signIn } = useAuth()
+  const isAuthenticating = useAppStore((s) => s.isAuthenticating)
 
   return (
     <>
-      {isSigningIn && (
+      {isAuthenticating && (
         <View style={s.loaderContainer}>
           <ActivityIndicator color={colors.primaryLight} size={'large'} />
         </View>
