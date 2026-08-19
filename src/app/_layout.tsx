@@ -22,6 +22,7 @@ export default function RootLayout() {
     GoogleSignin.configure({
       webClientId: WEB_CLIENT_ID,
       scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+      offlineAccess: true,
     })
   }, [])
 

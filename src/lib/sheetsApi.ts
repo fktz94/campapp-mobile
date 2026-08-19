@@ -7,8 +7,11 @@ import {
 const SPREADSHEET_ID = process.env.EXPO_PUBLIC_SPREADSHEET_ID!
 const BASE = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}`
 
-async function getAccessToken(): Promise<string> {
+async function getAccessToken(invalidToken?: string): Promise<string> {
   try {
+    if (invalidToken) {
+      await GoogleSignin.clearCachedAccessToken(invalidToken)
+    }
     const { accessToken } = await GoogleSignin.getTokens()
     return accessToken
   } catch (e) {
@@ -19,45 +22,62 @@ async function getAccessToken(): Promise<string> {
   }
 }
 
-async function get<T>(range: string): Promise<T> {
-  const token = await getAccessToken()
-  const res = await fetch(`${BASE}/values/${encodeURIComponent(range)}`, {
-    headers: { Authorization: `Bearer ${token}` },
+async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+  let token = await getAccessToken()
+
+  let res = await fetch(`${BASE}${endpoint}`, {
+    ...options,
+    headers: {
+      ...options.headers,
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
   })
-  if (!res.ok) throw new Error(`Sheets API error ${res.status}: ${await res.text()}`)
+
+  if (res.status === 401) {
+    token = await getAccessToken(token)
+    res = await fetch(`${BASE}${endpoint}`, {
+      ...options,
+      headers: {
+        ...options.headers,
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+  }
+
+  if (!res.ok) {
+    const errorText = await res.text()
+
+    if (res.status === 403 || res.status === 404) {
+      throw new Error('SHEET_ACCESS_DENIED')
+    }
+
+    throw new Error(`Sheets API error ${res.status}: ${errorText}`)
+  }
+
   return res.json()
 }
 
+async function get<T>(range: string): Promise<T> {
+  return request<T>(`/values/${encodeURIComponent(range)}`)
+}
+
 async function append(range: string, values: unknown[][]): Promise<void> {
-  const token = await getAccessToken()
-  const res = await fetch(
-    `${BASE}/values/${encodeURIComponent(range)}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`,
+  await request(
+    `/values/${encodeURIComponent(range)}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`,
     {
       method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify({ values }),
     }
   )
-  if (!res.ok) throw new Error(`Sheets API error ${res.status}: ${await res.text()}`)
 }
 
 async function update(range: string, values: unknown[][]): Promise<void> {
-  const token = await getAccessToken()
-  const res = await fetch(
-    `${BASE}/values/${encodeURIComponent(range)}?valueInputOption=USER_ENTERED`,
-    {
-      method: 'PUT',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ values }),
-    }
-  )
-  if (!res.ok) throw new Error(`Sheets API error ${res.status}: ${await res.text()}`)
+  await request(`/values/${encodeURIComponent(range)}?valueInputOption=USER_ENTERED`, {
+    method: 'PUT',
+    body: JSON.stringify({ values }),
+  })
 }
 
 export const sheetsApi = { get, append, update }

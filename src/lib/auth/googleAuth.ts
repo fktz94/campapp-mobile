@@ -10,7 +10,19 @@ export const restoreGoogleSession = async (): Promise<boolean> => {
   }
 }
 
-export const getSheetsAccessToken = async (): Promise<string> => {
+export const getSheetsAccessToken = async (invalidToken?: string): Promise<string> => {
+  if (invalidToken) {
+    try {
+      await GoogleSignin.clearCachedAccessToken(invalidToken)
+    } catch (e) {
+      console.warn('No se pudo limpiar la caché del token de Google:', e)
+    }
+  }
+
   const { accessToken } = await GoogleSignin.getTokens()
+  if (!accessToken) {
+    throw new Error('No se pudo obtener un accessToken de Google válido.')
+  }
+
   return accessToken
 }
