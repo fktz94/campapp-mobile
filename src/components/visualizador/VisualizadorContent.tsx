@@ -1,7 +1,6 @@
 import { useVisualizador } from '@/hooks/visualizador'
 import { VisualizadorParamKey, VisualizadorView } from '@/lib/types/visualizador'
 
-import ErrorMessage from '../ui/ErrorMessage'
 import ContenidoCultivo from './ContenidoCultivo'
 import ContenidoEstablecimiento from './ContenidoEstablecimiento'
 import ContenidoLote from './ContenidoLote'
@@ -39,7 +38,7 @@ const VisualizadorContent = () => {
   const missing = config.requiredParams.filter((key) => !params[key])
   if (missing.length) {
     const message = `Faltan parámetros: ${missing.join(', ')}`
-    return <ErrorMessage message={message} />
+    return
   }
 
   const componentProps = Object.fromEntries(config.requiredParams.map((key) => [key, params[key]]))

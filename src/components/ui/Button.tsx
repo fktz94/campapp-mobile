@@ -1,6 +1,7 @@
-import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native'
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
 
 import { colors, font, radius, spacing } from '@/constants/theme'
+import { AnimatedPressable } from './AnimatedPressable'
 
 interface Props {
   label: string
@@ -12,17 +13,17 @@ interface Props {
 
 export function Button({ label, onPress, variant = 'primary', loading, disabled }: Props) {
   return (
-    <Pressable
-      style={[s.btn, variant === 'outline' && s.outline, (disabled || loading) && s.disabled]}
-      onPress={onPress}
-      disabled={disabled || loading}
-    >
-      {loading ? (
-        <ActivityIndicator color={variant === 'outline' ? colors.primary : colors.surface} />
-      ) : (
-        <Text style={[s.txt, variant === 'outline' && s.txtOutline]}>{label}</Text>
-      )}
-    </Pressable>
+    <AnimatedPressable onPress={onPress} disabled={disabled || loading}>
+      <View
+        style={[s.btn, variant === 'outline' && s.outline, (disabled || loading) && s.disabled]}
+      >
+        {loading ? (
+          <ActivityIndicator color={variant === 'outline' ? colors.primary : colors.surface} />
+        ) : (
+          <Text style={[s.txt, variant === 'outline' && s.txtOutline]}>{label}</Text>
+        )}
+      </View>
+    </AnimatedPressable>
   )
 }
 

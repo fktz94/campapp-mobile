@@ -7,9 +7,10 @@ type Props = {
   children: React.ReactNode
   hitSlop?: number
   onPress?: () => void
+  disabled?: boolean
 }
 
-export function AnimatedPressable({ onPress, children, hitSlop = 10 }: Props) {
+export function AnimatedPressable({ onPress, children, hitSlop = 10, disabled }: Props) {
   const scale = useSharedValue(1)
   const opacity = useSharedValue(1)
 
@@ -22,6 +23,7 @@ export function AnimatedPressable({ onPress, children, hitSlop = 10 }: Props) {
     <Container
       onPress={onPress}
       hitSlop={hitSlop}
+      disabled={disabled}
       onPressIn={() => {
         scale.value = withSpring(0.85, { damping: 15, stiffness: 300 })
         opacity.value = withSpring(0.4, { damping: 15, stiffness: 300 })
