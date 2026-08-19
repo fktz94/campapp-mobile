@@ -1,7 +1,7 @@
-import { Slot } from 'expo-router'
+import { Stack } from 'expo-router'
 
 const VisualizadorLayout = () => {
-  return <Slot />
+  return <Stack screenOptions={{ headerShown: false }} />
 }
 
 export default VisualizadorLayout

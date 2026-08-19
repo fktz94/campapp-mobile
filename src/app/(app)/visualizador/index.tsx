@@ -1,11 +1,22 @@
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 
-const VisualizadorIndex = () => {
+import { ChipSelect } from '@/components/ui/ChipSelect'
+import { Screen } from '@/components/ui/Screen'
+import { SectionTitle } from '@/components/ui/SectionTitle'
+import VisualizadorContent from '@/components/visualizador/VisualizadorContent'
+import { VIEWS } from '@/constants/views'
+import { useVisualizador } from '@/hooks/visualizador'
+
+export default function VisualizadorScreen() {
+  const { view, setView } = useVisualizador()
+
   return (
-    <View>
-      <Text>Visualizador</Text>
-    </View>
+    <Screen>
+      <SectionTitle>Visualizador</SectionTitle>
+      <View>
+        <ChipSelect options={VIEWS} value={view} onChange={setView} />
+      </View>
+      <VisualizadorContent />
+    </Screen>
   )
 }
-
-export default VisualizadorIndex
