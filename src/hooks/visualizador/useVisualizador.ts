@@ -1,6 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router'
 
 import { VIEWS } from '@/constants/views'
+import { VIEW_REQUIRED_PARAMS } from '@/constants/visualizadorViews'
 import {
   VisualizadorState,
   VisualizadorURLParams,
@@ -39,6 +40,9 @@ export function useVisualizador() {
     cultivo: params.cultivo,
   }
 
+  const requiredKeys = VIEW_REQUIRED_PARAMS[view]
+  const isComplete = requiredKeys.every((key) => Boolean(state[key]))
+
   return {
     ...state,
     setView,
@@ -54,5 +58,6 @@ export function useVisualizador() {
       : [],
     filtersLoading: isLoading,
     filtersError: error,
+    isComplete,
   }
 }

@@ -1,49 +1,29 @@
+import { VIEW_REQUIRED_PARAMS } from '@/constants/visualizadorViews'
 import { useVisualizador } from '@/hooks/visualizador'
-import { VisualizadorParamKey, VisualizadorView } from '@/lib/types/visualizador'
+import { VisualizadorView } from '@/lib/types/visualizador'
 
 import ContenidoCultivo from './ContenidoCultivo'
 import ContenidoEstablecimiento from './ContenidoEstablecimiento'
 import ContenidoLote from './ContenidoLote'
 import ContenidoRendimiento from './ContenidoRendimiento'
 
-type ViewConfig = {
-  component: React.ComponentType<any>
-  requiredParams: VisualizadorParamKey[]
-}
-
-const viewsConfig: Record<VisualizadorView, ViewConfig> = {
-  lote: {
-    component: ContenidoLote,
-    requiredParams: ['campania', 'establecimiento', 'lote'],
-  },
-  establecimiento: {
-    component: ContenidoEstablecimiento,
-    requiredParams: ['campania', 'establecimiento'],
-  },
-  cultivo: {
-    component: ContenidoCultivo,
-    requiredParams: ['campania', 'cultivo'],
-  },
-  rendimiento: {
-    component: ContenidoRendimiento,
-    requiredParams: ['campania', 'establecimiento'],
-  },
+const VIEW_COMPONENTS: Record<VisualizadorView, React.ComponentType<any>> = {
+  lote: ContenidoLote,
+  establecimiento: ContenidoEstablecimiento,
+  cultivo: ContenidoCultivo,
+  rendimiento: ContenidoRendimiento,
 }
 
 const VisualizadorContent = () => {
   const { view, ...params } = useVisualizador()
-  const config = viewsConfig[view]
-  if (!config) return null
+  const requiredParams = VIEW_REQUIRED_PARAMS[view]
+  const Component = VIEW_COMPONENTS[view]
 
-  const missing = config.requiredParams.filter((key) => !params[key])
-  if (missing.length) {
-    const message = `Faltan parámetros: ${missing.join(', ')}`
-    return
-  }
+  const missing = requiredParams.filter((key) => !params[key])
+  if (missing.length > 0) return null
 
-  const componentProps = Object.fromEntries(config.requiredParams.map((key) => [key, params[key]]))
+  const componentProps = Object.fromEntries(requiredParams.map((key) => [key, params[key]]))
 
-  const Component = config.component
   return <Component {...componentProps} />
 }
 
