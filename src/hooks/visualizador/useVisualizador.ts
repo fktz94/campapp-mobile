@@ -1,14 +1,17 @@
+import { useLocalSearchParams, useRouter } from 'expo-router'
+
 import { VIEWS } from '@/constants/views'
 import {
   VisualizadorState,
   VisualizadorURLParams,
   VisualizadorView,
 } from '@/lib/types/visualizador'
-import { useLocalSearchParams, useRouter } from 'expo-router'
+import useFiltersOptions from './useFiltersOptions'
 
 export function useVisualizador() {
   const router = useRouter()
   const params = useLocalSearchParams<VisualizadorURLParams>()
+  const { data: options, isLoading, error } = useFiltersOptions()
 
   const validViews = VIEWS.map((v) => v.value) as string[]
   const view =
@@ -18,10 +21,15 @@ export function useVisualizador() {
 
   const setView = (newView: VisualizadorView) => router.setParams({ view: newView })
   const setCampania = (value: string) => router.setParams({ campania: value })
-  const setEstablecimiento = (value: string) =>
-    router.setParams({ establecimiento: value, lote: undefined })
+
+  const setEstablecimiento = (value: string) => {
+    const validLotes = options?.lotesByEstablecimiento[value] ?? []
+    const keepLote = params.lote && validLotes.includes(params.lote)
+    router.setParams({ establecimiento: value, lote: keepLote ? params.lote : undefined })
+  }
+
   const setLote = (value: string) => router.setParams({ lote: value })
-  const setCultivo = (value: string) => router.setParams({ cultivo: value }) // ✅ corregido
+  const setCultivo = (value: string) => router.setParams({ cultivo: value })
 
   const state: VisualizadorState = {
     view,
@@ -38,5 +46,13 @@ export function useVisualizador() {
     setEstablecimiento,
     setLote,
     setCultivo,
+    campanias: options?.campanias ?? [],
+    cultivos: options?.cultivos ?? [],
+    establecimientos: options?.establecimientos ?? [],
+    lotes: params.establecimiento
+      ? (options?.lotesByEstablecimiento[params.establecimiento] ?? [])
+      : [],
+    filtersLoading: isLoading,
+    filtersError: error,
   }
 }

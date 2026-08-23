@@ -36,7 +36,8 @@ export function ChipSelect<T extends string>({ options, value, onChange }: Props
       ref={scrollRef}
       horizontal
       showsHorizontalScrollIndicator={false}
-      style={s.row}
+      style={s.container}
+      contentContainerStyle={s.row}
       onLayout={(event) => {
         const { width } = event.nativeEvent.layout
         setScrollViewWidth(width)
@@ -60,7 +61,8 @@ export function ChipSelect<T extends string>({ options, value, onChange }: Props
 }
 
 const s = StyleSheet.create({
-  row: { marginTop: spacing.xs },
+  container: { marginVertical: spacing.lg, flexGrow: 0 },
+  row: { alignItems: 'flex-start' },
   chip: {
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,

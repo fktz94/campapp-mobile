@@ -5,7 +5,7 @@ import { colors, font, spacing } from '@/constants/theme'
 export const common = StyleSheet.create({
   screen: {
     flex: 1,
-    padding: spacing.lg,
+    paddingHorizontal: spacing.lg,
     backgroundColor: colors.background,
   },
   title: {

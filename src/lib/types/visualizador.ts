@@ -24,4 +24,11 @@ export type VisualizadorState = {
   cultivo: string | undefined
 }
 
+export type FilterOptions = {
+  campanias: string[]
+  cultivos: string[]
+  establecimientos: string[]
+  lotesByEstablecimiento: Record<string, string[]>
+}
+
 export type VisualizadorParamKey = keyof Omit<VisualizadorState, 'view'>

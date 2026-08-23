@@ -2,12 +2,19 @@ export type SheetResponse = { values?: string[][] }
 
 export type ListasData = {
   campanias: string[]
-  establecimientos: string[]
   labores: string[]
   cultivos: string[]
   proveedores: string[]
   responsables: string[]
   labranzas: string[]
+}
+
+export type Rotacion = {
+  establecimiento: string
+  lote: string
+  has: string
+  empresa: string
+  campañas: Record<string, string>
 }
 
 export type ProductoEnBloque = {

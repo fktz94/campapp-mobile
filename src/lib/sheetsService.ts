@@ -1,6 +1,6 @@
 import { computeCosechaTotals, groupLaboresIntoBloques } from '@/lib/helpers/laboresHelpers'
 import { col } from '@/lib/helpers/sheetsUtils'
-import { ListasData, SheetResponse } from '@/lib/types/sheets'
+import { ListasData, Rotacion, SheetResponse } from '@/lib/types/sheets'
 import { parseFechaToNum } from './helpers/date'
 import { sheetsApi } from './sheetsApi'
 
@@ -11,7 +11,6 @@ export async function fetchListas(): Promise<ListasData> {
   const rows = res.values ?? []
   return {
     campanias: col(rows, 1),
-    establecimientos: col(rows, 0),
     labores: col(rows, 3),
     cultivos: col(rows, 5),
     proveedores: col(rows, 6),
@@ -20,7 +19,7 @@ export async function fetchListas(): Promise<ListasData> {
   }
 }
 
-export async function fetchRotaciones() {
+export async function fetchRotaciones(): Promise<Rotacion[]> {
   const res = await sheetsApi.get<SheetResponse>('Rotaciones!A:Z')
   const rows = res.values ?? []
   if (rows.length < 2) return []
