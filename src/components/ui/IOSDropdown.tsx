@@ -6,6 +6,8 @@ import { colors, font, spacing } from '@/constants/theme'
 import Dropdown from './Dropdown'
 
 export default function iOSDropdown({ onChangeValue, selectedValue, values, label }: Dropdown) {
+  console.log(values)
+
   return (
     <View style={s.container}>
       <Text style={s.label}>{label}</Text>

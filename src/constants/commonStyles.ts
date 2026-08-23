@@ -14,4 +14,8 @@ export const common = StyleSheet.create({
     color: colors.primary,
     marginBottom: spacing.xl,
   },
+  visualizadorContent: {
+    flex: 1,
+    paddingTop: spacing.lg,
+  },
 })

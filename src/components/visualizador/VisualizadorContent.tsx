@@ -1,7 +1,7 @@
-import { VIEW_REQUIRED_PARAMS } from '@/constants/visualizadorViews'
-import { useVisualizador } from '@/hooks/visualizador'
+import { common } from '@/constants/commonStyles'
+import { useVisualizador } from '@/hooks/visualizador/useVisualizador'
 import { VisualizadorView } from '@/lib/types/visualizador'
-
+import { ScrollView } from 'react-native'
 import ContenidoCultivo from './ContenidoCultivo'
 import ContenidoEstablecimiento from './ContenidoEstablecimiento'
 import ContenidoLote from './ContenidoLote'
@@ -15,16 +15,13 @@ const VIEW_COMPONENTS: Record<VisualizadorView, React.ComponentType<any>> = {
 }
 
 const VisualizadorContent = () => {
-  const { view, ...params } = useVisualizador()
-  const requiredParams = VIEW_REQUIRED_PARAMS[view]
+  const { view } = useVisualizador()
   const Component = VIEW_COMPONENTS[view]
-
-  const missing = requiredParams.filter((key) => !params[key])
-  if (missing.length > 0) return null
-
-  const componentProps = Object.fromEntries(requiredParams.map((key) => [key, params[key]]))
-
-  return <Component {...componentProps} />
+  return (
+    <ScrollView showsVerticalScrollIndicator={false} style={common.visualizadorContent}>
+      <Component />
+    </ScrollView>
+  )
 }
 
 export default VisualizadorContent

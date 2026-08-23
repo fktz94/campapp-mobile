@@ -25,8 +25,8 @@ export function AnimatedPressable({ onPress, children, hitSlop = 10, disabled }:
       hitSlop={hitSlop}
       disabled={disabled}
       onPressIn={() => {
-        scale.value = withSpring(0.85, { damping: 15, stiffness: 300 })
-        opacity.value = withSpring(0.4, { damping: 15, stiffness: 300 })
+        scale.value = withSpring(0.95, { damping: 15, stiffness: 300 })
+        opacity.value = withSpring(0.7, { damping: 15, stiffness: 300 })
       }}
       onPressOut={() => {
         scale.value = withSpring(1, { damping: 15, stiffness: 300 })

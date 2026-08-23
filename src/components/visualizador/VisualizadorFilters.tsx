@@ -1,7 +1,7 @@
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
 
 import { colors, spacing } from '@/constants/theme'
-import { useVisualizador } from '@/hooks/visualizador'
+import { useVisualizador } from '@/hooks/visualizador/useVisualizador'
 import Dropdown from '../ui/Dropdown'
 
 export function VisualizadorFilters() {

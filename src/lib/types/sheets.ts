@@ -24,6 +24,13 @@ export type ProductoEnBloque = {
   unidad: string
   superficie: string
 }
+export type Producto = {
+  producto: string
+  categoria: string
+  dosis: string
+  unidad: string
+  superficie: string
+}
 
 export type Bloque = {
   fecha: string
@@ -33,7 +40,7 @@ export type Bloque = {
   provServicio: string
   responsable: string
   estado: string
-  productos: ProductoEnBloque[]
+  productos: Producto[]
   tieneServicio: boolean
   observaciones: string
 }

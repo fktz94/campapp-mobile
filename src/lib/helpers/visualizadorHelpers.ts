@@ -28,3 +28,12 @@ export function buildFiltersOptions(rotaciones: Rotacion[], listas: ListasData):
     lotesByEstablecimiento,
   }
 }
+
+export function fmt(n: number | string | undefined | null) {
+  if (n === null || n === undefined || n === '') return '—'
+  const x = parseFloat(String(n))
+  if (isNaN(x)) return '—'
+  if (x === 0) return '0'
+  if (x === Math.floor(x)) return x.toString()
+  return x >= 1 ? x.toFixed(1) : x.toFixed(2)
+}

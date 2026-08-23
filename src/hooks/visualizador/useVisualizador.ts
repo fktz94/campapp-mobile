@@ -24,9 +24,8 @@ export function useVisualizador() {
   const setCampania = (value: string) => router.setParams({ campania: value })
 
   const setEstablecimiento = (value: string) => {
-    const validLotes = options?.lotesByEstablecimiento[value] ?? []
-    const keepLote = params.lote && validLotes.includes(params.lote)
-    router.setParams({ establecimiento: value, lote: keepLote ? params.lote : undefined })
+    const lotes = options?.lotesByEstablecimiento[value] ?? []
+    router.setParams({ establecimiento: value, lote: lotes[0] })
   }
 
   const setLote = (value: string) => router.setParams({ lote: value })
@@ -34,10 +33,10 @@ export function useVisualizador() {
 
   const state: VisualizadorState = {
     view,
-    campania: params.campania,
-    establecimiento: params.establecimiento,
-    lote: params.lote,
-    cultivo: params.cultivo,
+    campania: params.campania ?? options?.campanias?.[options.campanias.length - 1],
+    establecimiento: params.establecimiento ?? options?.establecimientos?.[0],
+    lote: params.lote ?? options?.lotesByEstablecimiento?.[options?.establecimientos?.[0]][0],
+    cultivo: params.cultivo ?? options?.cultivos?.[options.cultivos.length - 1],
   }
 
   const requiredKeys = VIEW_REQUIRED_PARAMS[view]
@@ -53,8 +52,8 @@ export function useVisualizador() {
     campanias: options?.campanias ?? [],
     cultivos: options?.cultivos ?? [],
     establecimientos: options?.establecimientos ?? [],
-    lotes: params.establecimiento
-      ? (options?.lotesByEstablecimiento[params.establecimiento] ?? [])
+    lotes: state.establecimiento
+      ? (options?.lotesByEstablecimiento[state.establecimiento] ?? [])
       : [],
     filtersLoading: isLoading,
     filtersError: error,

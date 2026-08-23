@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 
 import { buildFiltersOptions } from '@/lib/helpers/visualizadorHelpers'
-import { fetchListas, fetchRotaciones } from '@/lib/sheetsService'
+import { fetchListas, fetchRotaciones } from '@/lib/services/sheetsService'
 
 function useFiltersOptions() {
   const { data, isLoading, error } = useQuery({

@@ -32,3 +32,41 @@ export type FilterOptions = {
 }
 
 export type VisualizadorParamKey = keyof Omit<VisualizadorState, 'view'>
+
+type Producto = { producto: string; dosis: string | number; unidad?: string }
+
+export type Bloque = {
+  fecha: string
+  fechaReal: string | null
+  labor: string
+  estado?: string
+  productos?: Producto[]
+  tieneServicio?: boolean
+  provServicio?: string
+  proveedores?: string[]
+  observaciones?: string
+}
+
+export type DatosVisualizador = {
+  ok: boolean
+  superficie: string
+  cultivo: string
+  cultivoAntecesor: string
+  campañaAntecesor: string
+  bloques: Bloque[]
+  cantidadLabores: number
+  cosechaKg: number
+  rendimientoKgHa: number | null
+  fechaSiembra: string | null
+  fechaSiembraPlan: string | null
+}
+
+export interface Card {
+  label: string
+  value: string | number
+  infoValueSmall?: boolean
+}
+
+export interface InfoGridProps {
+  cards: Card[]
+}
