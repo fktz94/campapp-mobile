@@ -22,7 +22,7 @@ export function buildFiltersOptions(rotaciones: Rotacion[], listas: ListasData):
   })
 
   return {
-    campanias: listas.campanias,
+    campanias: listas.campanias.reverse(),
     cultivos: listas.cultivos,
     establecimientos,
     lotesByEstablecimiento,

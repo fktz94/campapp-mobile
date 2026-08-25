@@ -180,11 +180,11 @@ const LaborBody = ({ b }: { b: Bloque }) => {
               </Text>
             ) : null}
           </View>
-          <View style={revisado ? s.badgeOk : s.badgePend}>
+          {/* <View style={revisado ? s.badgeOk : s.badgePend}>
             <Text style={revisado ? s.badgeOkText : s.badgePendText}>
               {b.estado || 'Sin revisar'}
             </Text>
-          </View>
+          </View> */}
         </Animated.View>
         <Animated.View
           style={[

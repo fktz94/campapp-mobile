@@ -37,9 +37,7 @@ export function useVisualizador() {
   const defaultEstablecimiento = useOptionsDefaults ? options?.establecimientos?.[0] : undefined
   const state: VisualizadorState = {
     view,
-    campania:
-      params.campania ??
-      (useOptionsDefaults ? options?.campanias?.[options.campanias.length - 1] : undefined),
+    campania: params.campania ?? (useOptionsDefaults ? options?.campanias?.[0] : undefined),
     establecimiento: params.establecimiento ?? defaultEstablecimiento,
     lote:
       params.lote ??

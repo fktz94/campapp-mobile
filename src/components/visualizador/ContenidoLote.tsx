@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import { StyleSheet, View } from 'react-native'
 
 import { useVisualizador } from '@/hooks/visualizador/useVisualizador'
 import { fmt } from '@/lib/helpers/visualizadorHelpers'
@@ -39,6 +40,9 @@ const ContenidoLote = () => {
     },
   ]
 
+  const showSiembra = Boolean(data.fechaSiembra || data.fechaSiembraPlan)
+  const showRendimiento = Boolean(data.rendimientoKgHa)
+
   return (
     <>
       <InfoGrid cards={infoCards} />
@@ -48,21 +52,31 @@ const ContenidoLote = () => {
           cultivoAntecesor={data.cultivoAntecesor}
         />
       )}
-      {(data.fechaSiembra || data.fechaSiembraPlan) && (
-        <Banner
-          label="Fecha de siembra"
-          value={data.fechaSiembra ?? `pendiente (${data.fechaSiembraPlan})`}
-        />
-      )}
-      {/* {data.rendimientoKgHa && (
-        <Banner
-          value={`${data.rendimientoKgHa?.toString()} kg/ha`}
-          label="Rendimiento de cosecha"
-        />
-      )} */}
+
+      <View style={s.bannerContainer}>
+        {showSiembra && (
+          <Banner
+            label="Fecha de siembra"
+            value={data.fechaSiembra ?? `pendiente (${data.fechaSiembraPlan})`}
+            containerStyle={s.bannerStyle}
+          />
+        )}
+        {showRendimiento && (
+          <Banner
+            value={`${data.rendimientoKgHa} kg/ha`}
+            label="Rendimiento de cosecha"
+            containerStyle={s.bannerStyle}
+          />
+        )}
+      </View>
       <LaboresList bloques={data.bloques} />
     </>
   )
 }
 
 export default ContenidoLote
+
+const s = StyleSheet.create({
+  bannerContainer: { display: 'flex', flexDirection: 'row', gap: 8, justifyContent: 'center' },
+  bannerStyle: { flex: 1, maxWidth: '50%' },
+})
