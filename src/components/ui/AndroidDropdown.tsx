@@ -1,10 +1,4 @@
-import {
-  DropdownMenu,
-  DropdownMenuItem,
-  Host,
-  OutlinedButton,
-  Text,
-} from '@expo/ui/jetpack-compose'
+import { Button, DropdownMenu, DropdownMenuItem, Host, Text } from '@expo/ui/jetpack-compose'
 import { useState } from 'react'
 
 import Dropdown from './Dropdown'
@@ -15,13 +9,14 @@ export default function AndroidDropdown({ onChangeValue, selectedValue, values, 
     <Host matchContents>
       <DropdownMenu expanded={isExpanded} onDismissRequest={() => setIsExpanded(false)}>
         <DropdownMenu.Trigger>
-          <OutlinedButton onClick={() => setIsExpanded(true)}>
-            <Text>{label}</Text>
-          </OutlinedButton>
+          <Button onClick={() => setIsExpanded(true)}>
+            <Text>{selectedValue ?? label}</Text>
+          </Button>
         </DropdownMenu.Trigger>
         <DropdownMenu.Items>
           {values.map((val) => (
             <DropdownMenuItem
+              key={val}
               onClick={() => {
                 setIsExpanded(false)
                 onChangeValue(val)

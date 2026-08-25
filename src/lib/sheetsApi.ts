@@ -1,30 +1,14 @@
-import {
-  GoogleSignin,
-  isErrorWithCode,
-  statusCodes,
-} from '@react-native-google-signin/google-signin'
+import { useAppStore } from '@/store/app'
+import { getSheetsAccessToken } from './auth/googleAuth'
 
 const SPREADSHEET_ID = process.env.EXPO_PUBLIC_SPREADSHEET_ID!
 const BASE = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}`
 
-async function getAccessToken(invalidToken?: string): Promise<string> {
-  try {
-    if (invalidToken) {
-      await GoogleSignin.clearCachedAccessToken(invalidToken)
-    }
-    const { accessToken } = await GoogleSignin.getTokens()
-    return accessToken
-  } catch (e) {
-    if (isErrorWithCode(e) && e.code === statusCodes.SIGN_IN_REQUIRED) {
-      throw new Error('SIGN_IN_REQUIRED')
-    }
-    throw e
-  }
-}
-
 async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-  let token = await getAccessToken()
-
+  let token = useAppStore.getState().googleAccessToken
+  if (!token) {
+    token = await getSheetsAccessToken()
+  }
   let res = await fetch(`${BASE}${endpoint}`, {
     ...options,
     headers: {
@@ -35,7 +19,7 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
   })
 
   if (res.status === 401) {
-    token = await getAccessToken(token)
+    token = await getSheetsAccessToken(token)
     res = await fetch(`${BASE}${endpoint}`, {
       ...options,
       headers: {

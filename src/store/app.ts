@@ -5,6 +5,7 @@ interface AppState {
   authError: string | null
   campania: string | null
   establecimiento: string | null
+  googleAccessToken: string | null
   hydrated: boolean
   isAuthenticating: boolean
   user: User | null
@@ -12,6 +13,7 @@ interface AppState {
   setAuthError: (e: string | null) => void
   setCampania: (c: string) => void
   setEstablecimiento: (e: string) => void
+  setGoogleAccessToken: (t: string | null) => void
   setHydrated: (v: boolean) => void
   setIsAuthenticating: (v: boolean) => void
   setUser: (u: User | null) => void
@@ -21,6 +23,7 @@ export const useAppStore = create<AppState>((set) => ({
   authError: null,
   campania: null,
   establecimiento: null,
+  googleAccessToken: null,
   hydrated: false,
   isAuthenticating: false,
   user: null,
@@ -28,6 +31,7 @@ export const useAppStore = create<AppState>((set) => ({
   setAuthError: (authError) => set({ authError }),
   setCampania: (campania) => set({ campania }),
   setEstablecimiento: (establecimiento) => set({ establecimiento }),
+  setGoogleAccessToken: (googleAccessToken) => set({ googleAccessToken }),
   setHydrated: (hydrated) => set({ hydrated }),
   setIsAuthenticating: (v) => set({ isAuthenticating: v }),
   setUser: (user) => set({ user }),

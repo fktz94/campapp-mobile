@@ -44,7 +44,7 @@ const s = StyleSheet.create({
   infoValueSmall: {
     fontSize: font.md,
     marginBottom: 3,
-    paddingHorizontal: 3,
+    paddingHorizontal: 5,
   },
   infoLabel: {
     fontSize: font.sm - 1,

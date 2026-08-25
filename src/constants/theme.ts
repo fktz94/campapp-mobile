@@ -11,6 +11,12 @@ export const colors = {
   error: '#c62828',
   errorLight: '#fdecea',
   border: '#ddd',
+  surfacePressed: '#f0f0f0',
+  primaryPressed: '#1b5e20',
+  orange: '#ff9800', // pendiente border normal
+  orangePressed: '#e65100',
+  textGreen: '#7a9970', // laborLabor normal
+  textGreenPressed: '#4c7a3f',
 }
 
 export const spacing = {

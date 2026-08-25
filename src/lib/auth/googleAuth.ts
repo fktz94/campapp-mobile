@@ -1,6 +1,14 @@
-import { GoogleSignin } from '@react-native-google-signin/google-signin'
+import {
+  GoogleSignin,
+  isErrorWithCode,
+  statusCodes,
+} from '@react-native-google-signin/google-signin'
+
+import { useAppStore } from '@/store/app'
 
 export const restoreGoogleSession = async (): Promise<boolean> => {
+  const current = GoogleSignin.getCurrentUser()
+  if (current) return true
   if (!GoogleSignin.hasPreviousSignIn()) return false
   try {
     await GoogleSignin.signInSilently()
@@ -19,10 +27,17 @@ export const getSheetsAccessToken = async (invalidToken?: string): Promise<strin
     }
   }
 
-  const { accessToken } = await GoogleSignin.getTokens()
-  if (!accessToken) {
-    throw new Error('No se pudo obtener un accessToken de Google válido.')
+  try {
+    const { accessToken } = await GoogleSignin.getTokens()
+    if (!accessToken) {
+      throw new Error('No se pudo obtener un accessToken de Google válido.')
+    }
+    useAppStore.getState().setGoogleAccessToken(accessToken)
+    return accessToken
+  } catch (e) {
+    if (isErrorWithCode(e) && e.code === statusCodes.SIGN_IN_REQUIRED) {
+      throw new Error('SIGN_IN_REQUIRED')
+    }
+    throw e
   }
-
-  return accessToken
 }

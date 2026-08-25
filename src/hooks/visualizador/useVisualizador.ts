@@ -1,4 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router'
+import { Platform } from 'react-native'
 
 import { VIEWS } from '@/constants/views'
 import { VIEW_REQUIRED_PARAMS } from '@/constants/visualizadorViews'
@@ -8,6 +9,8 @@ import {
   VisualizadorView,
 } from '@/lib/types/visualizador'
 import useFiltersOptions from './useFiltersOptions'
+
+const useOptionsDefaults = Platform.OS === 'ios'
 
 export function useVisualizador() {
   const router = useRouter()
@@ -25,18 +28,27 @@ export function useVisualizador() {
 
   const setEstablecimiento = (value: string) => {
     const lotes = options?.lotesByEstablecimiento[value] ?? []
-    router.setParams({ establecimiento: value, lote: lotes[0] })
+    router.setParams({ establecimiento: value, lote: useOptionsDefaults ? lotes[0] : undefined })
   }
 
   const setLote = (value: string) => router.setParams({ lote: value })
   const setCultivo = (value: string) => router.setParams({ cultivo: value })
 
+  const defaultEstablecimiento = useOptionsDefaults ? options?.establecimientos?.[0] : undefined
   const state: VisualizadorState = {
     view,
-    campania: params.campania ?? options?.campanias?.[options.campanias.length - 1],
-    establecimiento: params.establecimiento ?? options?.establecimientos?.[0],
-    lote: params.lote ?? options?.lotesByEstablecimiento?.[options?.establecimientos?.[0]][0],
-    cultivo: params.cultivo ?? options?.cultivos?.[options.cultivos.length - 1],
+    campania:
+      params.campania ??
+      (useOptionsDefaults ? options?.campanias?.[options.campanias.length - 1] : undefined),
+    establecimiento: params.establecimiento ?? defaultEstablecimiento,
+    lote:
+      params.lote ??
+      (useOptionsDefaults && defaultEstablecimiento
+        ? options?.lotesByEstablecimiento?.[defaultEstablecimiento]?.[0]
+        : undefined),
+    cultivo:
+      params.cultivo ??
+      (useOptionsDefaults ? options?.cultivos?.[options.cultivos.length - 1] : undefined),
   }
 
   const requiredKeys = VIEW_REQUIRED_PARAMS[view]

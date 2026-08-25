@@ -4,6 +4,7 @@ import { useCallback } from 'react'
 import { formatGoogleSignInError } from '@/constants/authErrors'
 import { forceFullSignOut } from '@/lib/auth/authOrchestation'
 import { auth, GoogleAuthProvider, signInWithCredential } from '@/lib/auth/firebaseAuth'
+import { getSheetsAccessToken } from '@/lib/auth/googleAuth'
 import { useAppStore } from '@/store/app'
 
 const useAuth = () => {
@@ -20,7 +21,8 @@ const useAuth = () => {
         if (!idToken) {
           throw new Error('No ID token returned from Google Sign-In.')
         }
-        const credential = GoogleAuthProvider.credential(idToken)
+        const accessToken = await getSheetsAccessToken()
+        const credential = GoogleAuthProvider.credential(idToken, accessToken)
         await signInWithCredential(auth, credential)
         setAuthError(null)
       }

@@ -1,5 +1,5 @@
 import { colors, font, radius, spacing } from '@/constants/theme'
-import { formatDateToDMY } from '@/lib/helpers/date'
+
 import { fmt } from '@/lib/helpers/visualizadorHelpers'
 import { Bloque } from '@/lib/types/visualizador'
 import { useEffect, useRef, useState } from 'react'
@@ -17,19 +17,38 @@ const LaborBody = ({ b }: { b: Bloque }) => {
   const opacityAnim = useRef(new Animated.Value(0)).current
   const [contentHeight, setContentHeight] = useState(0)
 
+  const pressProgress = useRef(new Animated.Value(0)).current
+
   const onPressIn = () => {
-    Animated.timing(scaleAnim, {
-      toValue: 0.97,
-      duration: 100,
-      useNativeDriver: true,
-    }).start()
-  }
-  const onPressOut = () => {
-    Animated.timing(scaleAnim, {
+    Animated.timing(pressProgress, {
       toValue: 1,
-      duration: 100,
-      useNativeDriver: true,
+      duration: 200,
+      useNativeDriver: false,
     }).start()
+
+    if (!isOpened) {
+      Animated.timing(scaleAnim, {
+        toValue: 0.97,
+        duration: 200,
+        useNativeDriver: false,
+      }).start()
+    }
+  }
+
+  const onPressOut = () => {
+    Animated.timing(pressProgress, {
+      toValue: 0,
+      duration: 200,
+      useNativeDriver: false,
+    }).start()
+
+    if (!isOpened) {
+      Animated.timing(scaleAnim, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: false,
+      }).start()
+    }
   }
   const toggleOpen = () => {
     setIsOpened(!isOpened)
@@ -106,33 +125,58 @@ const LaborBody = ({ b }: { b: Bloque }) => {
   )
 
   return (
-    <Pressable
-      onPress={toggleOpen}
-      onPressIn={onPressIn}
-      onPressOut={onPressOut}
-      style={({ pressed }) => ({ opacity: pressed ? 0.98 : 1 })}
-    >
+    <Pressable onPress={toggleOpen} onPressIn={onPressIn} onPressOut={onPressOut}>
       <Animated.View
         style={[
           s.laborCard,
-          revisado ? s.laborCardRevisado : s.laborCardPendiente,
-          { transform: [{ scale: scaleAnim }] },
+          {
+            backgroundColor: pressProgress.interpolate({
+              inputRange: [0, 1],
+              outputRange: [colors.surface, colors.surfacePressed],
+            }),
+            borderLeftColor: pressProgress.interpolate({
+              inputRange: [0, 1],
+              outputRange: [
+                revisado ? colors.primary : '#ff9800',
+                revisado ? colors.primaryPressed : '#e65100',
+              ],
+            }),
+            transform: [{ scale: scaleAnim }],
+          },
         ]}
       >
         <View style={s.hiddenMeasurer} onLayout={handleMeasure} pointerEvents="none">
           <View style={s.laborBodyContent}>{renderBodyContent()}</View>
         </View>
-        <View style={s.laborHdr}>
+        <Animated.View
+          style={[
+            s.laborHdr,
+            {
+              backgroundColor: pressProgress.interpolate({
+                inputRange: [0, 1],
+                outputRange: ['#f5f9f4', '#e0ece0'],
+              }),
+            },
+          ]}
+        >
           <View style={{ flex: 1 }}>
-            <Text style={s.laborFecha}>
-              {hecha ? (b.fechaReal ? formatDateToDMY(b.fechaReal) : '') : 'Pendiente'}
-            </Text>
-            <Text style={s.laborLabor}>{b.labor || '—'}</Text>
+            <Text style={s.laborFecha}>{hecha ? b.fechaReal : 'Pendiente'}</Text>
+            <Animated.Text
+              style={[
+                s.laborLabor,
+                {
+                  color: pressProgress.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ['#7a9970', '#4c7a3f'],
+                  }),
+                },
+              ]}
+            >
+              {b.labor || '—'}
+            </Animated.Text>
             {b.fecha ? (
               <Text style={s.laborPlan}>
-                {hecha
-                  ? `Planificado ${b.fecha ? formatDateToDMY(b.fecha) : ''}`
-                  : `Planificado para el ${b.fecha ? formatDateToDMY(b.fecha) : ''}`}
+                {hecha ? `Planificado ${b.fecha}` : `Planificado para el ${b.fecha}`}
               </Text>
             ) : null}
           </View>
@@ -141,7 +185,7 @@ const LaborBody = ({ b }: { b: Bloque }) => {
               {b.estado || 'Sin revisar'}
             </Text>
           </View>
-        </View>
+        </Animated.View>
         <Animated.View
           style={[
             s.laborBodyWrapper,

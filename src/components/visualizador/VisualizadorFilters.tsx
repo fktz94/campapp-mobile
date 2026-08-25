@@ -23,8 +23,6 @@ export function VisualizadorFilters() {
     filtersError,
   } = useVisualizador()
 
-  if (filtersError) return <Text style={s.error}>No se pudieron cargar los filtros.</Text>
-
   const filters = [
     {
       key: 'campania',
@@ -62,7 +60,9 @@ export function VisualizadorFilters() {
 
   return (
     <View style={s.container}>
-      {filtersLoading ? (
+      {filtersError ? (
+        <Text style={s.error}>No se pudieron cargar los filtros.</Text>
+      ) : filtersLoading ? (
         <ActivityIndicator style={s.spinner} />
       ) : (
         filters

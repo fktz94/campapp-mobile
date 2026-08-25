@@ -1,4 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query'
+import { useState } from 'react'
 
 import { Button } from '@/components/ui/Button'
 import { ChipSelect } from '@/components/ui/ChipSelect'
@@ -9,22 +10,12 @@ import { VisualizadorFilters } from '@/components/visualizador/VisualizadorFilte
 import { VIEWS } from '@/constants/views'
 import { useVisualizador } from '@/hooks/visualizador/useVisualizador'
 import { buildVisualizadorQuery } from '@/lib/services/visualizadorQueries'
-import { useState } from 'react'
 
 export default function VisualizadorScreen() {
   const queryClient = useQueryClient()
-  const {
-    view,
-    setView,
-    isComplete,
-    campania,
-    establecimiento,
-    lote,
-    cultivo,
-    campanias,
-    setCampania,
-  } = useVisualizador()
+  const { view, setView, isComplete, campania, establecimiento, lote, cultivo } = useVisualizador()
   const [isLoading, setIsLoading] = useState(false)
+
   const search = () => {
     if (!isComplete) return
     const { queryKey, queryFn } = buildVisualizadorQuery(view, {
@@ -47,7 +38,7 @@ export default function VisualizadorScreen() {
       <ChipSelect options={VIEWS} value={view} onChange={setView} />
       <VisualizadorFilters />
       {isLoading ? <ContentLoader /> : <VisualizadorContent />}
-      <Button label="Buscar" onPress={search} disabled={!isComplete} />
+      <Button label="Buscar" onPress={search} disabled={!isComplete || isLoading} />
     </Screen>
   )
 }

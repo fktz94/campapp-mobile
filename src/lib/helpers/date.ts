@@ -19,35 +19,31 @@ export function parseFechaToNum(s: string): number {
   return 0
 }
 
-/**
- * Converts a date string from "dd-mmm-yyyy" to "dd/mm/yyyy"
- * Example: "13-jun-2023" → "13/06/2023"
- */
 export function formatDateToDMY(dateStr: string): string {
   const parts = dateStr.split('-')
-  if (parts.length !== 3) return dateStr // fallback for unexpected format
+  if (parts.length !== 3) return dateStr
 
   const day = parts[0].padStart(2, '0')
   const monthAbbr = parts[1].toLowerCase()
   const year = parts[2]
 
   const months: Record<string, string> = {
-    jan: '01',
+    ene: '01',
     feb: '02',
     mar: '03',
-    apr: '04',
+    abr: '04',
     may: '05',
     jun: '06',
     jul: '07',
-    aug: '08',
+    ago: '08',
     sep: '09',
     oct: '10',
     nov: '11',
-    dec: '12',
+    dic: '12',
   }
 
   const month = months[monthAbbr]
-  if (!month) return dateStr // fallback if month abbreviation is unknown
+  if (!month) return dateStr
 
   return `${day}/${month}/${year}`
 }

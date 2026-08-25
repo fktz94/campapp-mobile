@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 
 import { useVisualizador } from '@/hooks/visualizador/useVisualizador'
-import { formatDateToDMY } from '@/lib/helpers/date'
 import { fmt } from '@/lib/helpers/visualizadorHelpers'
 import { buildVisualizadorQuery } from '@/lib/services/visualizadorQueries'
 import { Card, DatosVisualizador } from '@/lib/types/visualizador'
@@ -49,22 +48,18 @@ const ContenidoLote = () => {
           cultivoAntecesor={data.cultivoAntecesor}
         />
       )}
-      {data.fechaSiembra ||
-        (data.fechaSiembraPlan && (
-          <Banner
-            label="Fecha de siembra"
-            value={
-              data.fechaSiembra
-                ? formatDateToDMY(data.fechaSiembra)
-                : data.fechaSiembraPlan
-                  ? `pendiente (${formatDateToDMY(data.fechaSiembraPlan)})`
-                  : ''
-            }
-          />
-        ))}
-      {data.rendimientoKgHa && +data.rendimientoKgHa > 0 && (
-        <Banner value={`${data.rendimientoKgHa} kg/ha`} label="Rendimiento de cosecha" />
+      {(data.fechaSiembra || data.fechaSiembraPlan) && (
+        <Banner
+          label="Fecha de siembra"
+          value={data.fechaSiembra ?? `pendiente (${data.fechaSiembraPlan})`}
+        />
       )}
+      {/* {data.rendimientoKgHa && (
+        <Banner
+          value={`${data.rendimientoKgHa?.toString()} kg/ha`}
+          label="Rendimiento de cosecha"
+        />
+      )} */}
       <LaboresList bloques={data.bloques} />
     </>
   )
