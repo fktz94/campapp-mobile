@@ -13,7 +13,11 @@ export const getMissingParamsMessage = (view: VisualizadorView, params: Record<s
   return `Faltan parámetros: ${missing.join(', ')}`
 }
 
-export function buildFiltersOptions(rotaciones: Rotacion[], listas: ListasData): FilterOptions {
+export function buildFiltersOptions(
+  rotaciones: Rotacion[],
+  listas: ListasData,
+  cultivosRotacion: string[]
+): FilterOptions {
   const establecimientos = [...new Set(rotaciones.map((r) => r.establecimiento))].sort()
 
   const lotesByEstablecimiento: Record<string, string[]> = {}
@@ -23,7 +27,7 @@ export function buildFiltersOptions(rotaciones: Rotacion[], listas: ListasData):
 
   return {
     campanias: listas.campanias.reverse(),
-    cultivos: listas.cultivos,
+    cultivos: cultivosRotacion.length ? cultivosRotacion : listas.cultivos,
     establecimientos,
     lotesByEstablecimiento,
   }

@@ -437,3 +437,12 @@ export async function getDatosCosecha(campania: string, establecimiento: string)
     return { ok: false, error: e.message }
   }
 }
+
+export async function fetchCultivosRotacion(): Promise<string[]> {
+  const res = await sheetsApi.get<SheetResponse>('Cultivos!A:A')
+  const rows = res.values ?? []
+  return rows
+    .slice(1)
+    .map((r) => (r[0] || '').toString().trim())
+    .filter(Boolean)
+}

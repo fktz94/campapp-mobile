@@ -70,3 +70,49 @@ export interface Card {
 export interface InfoGridProps {
   cards: Card[]
 }
+
+export type LoteResumen = {
+  lote: string
+  cultivo: string
+  superficie: string
+  cantidadAplicaciones: number
+  ultimasLabores: { fecha: string; labor: string; fechaReal: string }[]
+  fechaSiembra: string | null
+  fechaSiembraPlan: string | null
+  rendimientoKgHa: number | null
+  cultivoAntecesor: string
+  campañaAntecesor: string
+}
+
+export type CultivoResumenItem = {
+  cultivo: string
+  lotes: number
+  hectareas: number
+}
+
+export type DatosResumen = {
+  ok: boolean
+  lotes: LoteResumen[]
+  totalHa: number
+  cultivoResumen: CultivoResumenItem[]
+}
+export type LotePorCultivo = {
+  establecimiento: string
+  lote: string
+  cultivo: string
+  superficie: string
+  cantidadAplicaciones: number
+  ultimasLabores: { fecha: string; labor: string; fechaReal: string }[]
+  fechaSiembra: string | null
+  fechaSiembraPlan: string | null
+  rendimientoKgHa: number | null
+  cultivoAntecesor: string
+  campañaAntecesor: string
+}
+
+export type DatosPorCultivo = {
+  ok: boolean
+  lotes: LotePorCultivo[]
+  totalHa: number
+  establecimientos: number
+}

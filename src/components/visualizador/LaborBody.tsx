@@ -1,12 +1,14 @@
 import { colors, font, radius, spacing } from '@/constants/theme'
+import { Animated, LayoutChangeEvent, Pressable, StyleSheet, Text, View } from 'react-native'
 
 import { fmt } from '@/lib/helpers/visualizadorHelpers'
 import { Bloque } from '@/lib/types/visualizador'
 import { useEffect, useRef, useState } from 'react'
-import { Animated, LayoutChangeEvent, Pressable, StyleSheet, Text, View } from 'react-native'
 
 const LaborBody = ({ b }: { b: Bloque }) => {
   const [isOpened, setIsOpened] = useState(false)
+  const [contentHeight, setContentHeight] = useState(0)
+
   const hecha = !!b.fechaReal
   const revisado = b.estado === 'Revisado'
   const productos = (b.productos ?? []).filter((p) => p.producto && p.producto !== 'Servicio')
@@ -15,8 +17,6 @@ const LaborBody = ({ b }: { b: Bloque }) => {
   const scaleAnim = useRef(new Animated.Value(1)).current
   const heightAnim = useRef(new Animated.Value(0)).current
   const opacityAnim = useRef(new Animated.Value(0)).current
-  const [contentHeight, setContentHeight] = useState(0)
-
   const pressProgress = useRef(new Animated.Value(0)).current
 
   const onPressIn = () => {
