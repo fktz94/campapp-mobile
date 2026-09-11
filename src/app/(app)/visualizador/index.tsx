@@ -16,7 +16,7 @@ export default function VisualizadorScreen() {
   const { view, setView, isComplete, campania, establecimiento, lote, cultivo } = useVisualizador()
   const [isLoading, setIsLoading] = useState(false)
 
-  const search = () => {
+  const search = async () => {
     if (!isComplete) return
     const { queryKey, queryFn } = buildVisualizadorQuery(view, {
       campania: campania ?? '',
@@ -24,13 +24,12 @@ export default function VisualizadorScreen() {
       lote: lote ?? '',
       cultivo: cultivo ?? '',
     })
-    const fn = () => {
-      setIsLoading(true)
-      return queryFn()
+    setIsLoading(true)
+    try {
+      await queryClient.fetchQuery({ queryKey, queryFn, staleTime: 1000 * 60 * 60 })
+    } finally {
+      setIsLoading(false)
     }
-    queryClient
-      .fetchQuery({ queryKey, queryFn: fn, staleTime: 1000 * 60 * 60 })
-      .finally(() => setIsLoading(false))
   }
 
   return (

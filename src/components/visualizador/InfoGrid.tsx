@@ -8,8 +8,14 @@ const InfoGrid: React.FC<InfoGridProps> = ({ cards }) => {
     <View style={s.infoGrid}>
       {cards.map((card, cardIndex) => (
         <View key={cardIndex} style={s.infoCard}>
-          <Text style={[s.infoValue, card.infoValueSmall && s.infoValueSmall]}>{card.value}</Text>
-          <Text style={s.infoLabel}>{card.label}</Text>
+          <View style={s.valueContainer}>
+            <Text style={[s.infoValue, card.infoValueSmall && s.infoValueSmall]}>{card.value}</Text>
+          </View>
+          <View style={s.labelContainer}>
+            <Text style={s.infoLabel} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6}>
+              {card.label}
+            </Text>
+          </View>
         </View>
       ))}
     </View>
@@ -30,11 +36,31 @@ const s = StyleSheet.create({
     borderRadius: radius.md,
     alignItems: 'center',
     maxWidth: '40%',
-    height: 85,
-    paddingBottom: spacing.lg,
-    justifyContent: 'flex-end',
-    gap: 4,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.xs,
   },
+
+  valueContainer: {
+    height: 40,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  labelContainer: {
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 4,
+    width: '100%',
+  },
+
+  infoLabel: {
+    fontSize: font.sm - 1,
+    color: colors.textSecondary,
+    textTransform: 'uppercase',
+    letterSpacing: 0.3,
+    textAlign: 'center',
+  },
+
   infoValue: {
     fontSize: font.xxl,
     fontWeight: '700',
@@ -45,12 +71,6 @@ const s = StyleSheet.create({
     fontSize: font.md,
     marginBottom: 3,
     paddingHorizontal: 5,
-  },
-  infoLabel: {
-    fontSize: font.sm - 1,
-    color: colors.textSecondary,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
   },
 })
 
