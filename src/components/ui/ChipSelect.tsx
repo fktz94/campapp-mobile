@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import { Pressable, ScrollView, StyleSheet, Text } from 'react-native'
 
 import { colors, font, radius, spacing } from '@/constants/theme'
@@ -16,19 +16,40 @@ interface Props<T extends string> {
 
 export function ChipSelect<T extends string>({ options, value, onChange }: Props<T>) {
   const scrollRef = useRef<ScrollView>(null)
-  const [scrollViewWidth, setScrollViewWidth] = useState(0)
+  const scrollViewWidth = useRef(0)
 
   const chipLayouts = useRef<Map<T, { x: number; width: number }>>(new Map())
+  const initialScrollDone = useRef(false)
+
+  const handleScroll = (option: T) => {
+    const layout = chipLayouts.current.get(option)
+
+    if (!layout || !scrollRef.current || scrollViewWidth.current === 0) return
+
+    const { x, width: chipWidth } = layout
+    const targetX = Math.max(0, x - (scrollViewWidth.current - chipWidth) / 2)
+
+    scrollRef.current.scrollTo({
+      x: targetX,
+      animated: true,
+    })
+  }
+
+  const tryInitialScroll = () => {
+    if (initialScrollDone.current) return
+
+    if (!chipLayouts.current.has(value) || value === options[0].value) return
+    if (scrollViewWidth.current === 0) return
+
+    initialScrollDone.current = true
+    requestAnimationFrame(() => {
+      handleScroll(value)
+    })
+  }
 
   const handlePress = (option: T) => {
     onChange(option)
-
-    const layout = chipLayouts.current.get(option)
-    if (!layout || !scrollRef.current || scrollViewWidth === 0) return
-
-    const { x, width: chipWidth } = layout
-    const targetX = Math.max(0, x - (scrollViewWidth - chipWidth) / 2)
-    scrollRef.current.scrollTo({ x: targetX, animated: true })
+    handleScroll(option)
   }
 
   return (
@@ -39,8 +60,8 @@ export function ChipSelect<T extends string>({ options, value, onChange }: Props
       style={s.container}
       contentContainerStyle={s.row}
       onLayout={(event) => {
-        const { width } = event.nativeEvent.layout
-        setScrollViewWidth(width)
+        scrollViewWidth.current = event.nativeEvent.layout.width
+        tryInitialScroll()
       }}
     >
       {options.map((o) => (
@@ -50,7 +71,12 @@ export function ChipSelect<T extends string>({ options, value, onChange }: Props
           onPress={() => handlePress(o.value)}
           onLayout={(event) => {
             const { x, width } = event.nativeEvent.layout
+
             chipLayouts.current.set(o.value, { x, width })
+
+            if (o.value === value) {
+              tryInitialScroll()
+            }
           }}
         >
           <Text style={[s.txt, value === o.value && s.txtOn]}>{o.label}</Text>
@@ -59,7 +85,6 @@ export function ChipSelect<T extends string>({ options, value, onChange }: Props
     </ScrollView>
   )
 }
-
 const s = StyleSheet.create({
   container: { marginVertical: spacing.lg, flexGrow: 0 },
   row: { alignItems: 'flex-start' },

@@ -3,16 +3,23 @@ import { Screen } from '@/components/ui/Screen'
 import VisualizadorContent from '@/components/visualizador/VisualizadorContent'
 import { VisualizadorFilters } from '@/components/visualizador/VisualizadorFilters'
 import { VIEWS } from '@/constants/views'
-import { useVisualizador } from '@/hooks/visualizador/useVisualizador'
+import { VisualizadorProvider, useVisualizadorContext } from '@/contexts/VisualizadorContext'
 
-export default function VisualizadorScreen() {
-  const { view, setView } = useVisualizador()
-
+function VisualizadorScreenInner() {
+  const { view, setView } = useVisualizadorContext()
   return (
     <Screen>
       <ChipSelect options={VIEWS} value={view} onChange={setView} />
       <VisualizadorFilters />
       <VisualizadorContent />
     </Screen>
+  )
+}
+
+export default function VisualizadorScreen() {
+  return (
+    <VisualizadorProvider>
+      <VisualizadorScreenInner />
+    </VisualizadorProvider>
   )
 }

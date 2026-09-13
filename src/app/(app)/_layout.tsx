@@ -1,8 +1,8 @@
 import { Redirect, Stack } from 'expo-router'
+import { StyleSheet, Text } from 'react-native'
 
 import { colors, font, spacing } from '@/constants/theme'
 import { useAppStore } from '@/store/app'
-import { StyleSheet, Text } from 'react-native'
 
 export default function AppLayout() {
   const user = useAppStore((s) => s.user)
@@ -14,10 +14,12 @@ export default function AppLayout() {
   return (
     <Stack
       screenOptions={{
-        headerTitle: (props) => <Text style={s.text}>{props.children}</Text>,
+        headerTitle: ({ children }) => <Text style={s.text}>{children}</Text>,
         headerBackButtonDisplayMode: 'minimal',
       }}
-    />
+    >
+      <Stack.Screen name="visualizador" options={{ title: 'Visualizador' }} />
+    </Stack>
   )
 }
 

@@ -10,7 +10,9 @@ import type {
 import { useAppStore } from '@/store/app'
 import useFiltersOptions from './useFiltersOptions'
 
-const useOptionsDefaults = Platform.OS === 'ios'
+const APPLY_IOS_DEFAULTS = Platform.OS === 'ios'
+
+type VisualizadorPatch = Partial<Record<keyof VisualizadorURLParams, string | null>>
 
 export function useVisualizador() {
   const router = useRouter()
@@ -19,56 +21,52 @@ export function useVisualizador() {
   const last = useAppStore((s) => s.lastVisualizador)
   const setLastVisualizador = useAppStore((s) => s.setLastVisualizador)
 
-  const validViews = VIEWS.map((v) => v.value) as string[]
+  const updateVisualizador = (patch: VisualizadorPatch) => {
+    const routerPatch = Object.fromEntries(
+      Object.entries(patch).map(([k, v]) => [k, v === null ? '' : v])
+    )
+    router.setParams(routerPatch)
+
+    const storePatch = Object.fromEntries(
+      Object.entries(patch).map(([k, v]) => [k, v === null ? undefined : v])
+    )
+    setLastVisualizador(storePatch)
+  }
+
+  const validViews = VIEWS.map((v) => v.value)
   const view =
-    params.view && validViews.includes(params.view)
+    params.view && validViews.includes(params.view as VisualizadorView)
       ? (params.view as VisualizadorView)
       : (last.view ?? VIEWS[0].value)
 
-  const setView = (newView: VisualizadorView) => {
-    router.setParams({ view: newView })
-    setLastVisualizador({ view: newView })
-  }
-
-  const setCampania = (value: string) => {
-    router.setParams({ campania: value })
-    setLastVisualizador({ campania: value })
-  }
+  const setView = (newView: VisualizadorView) => updateVisualizador({ view: newView })
+  const setCampania = (value: string) => updateVisualizador({ campania: value })
+  const setLote = (value: string) => updateVisualizador({ lote: value })
+  const setCultivo = (value: string) => updateVisualizador({ cultivo: value })
 
   const setEstablecimiento = (value: string) => {
     const lotes = options?.lotesByEstablecimiento[value] ?? []
-    const defaultLote = useOptionsDefaults ? lotes[0] : undefined
-    router.setParams({ establecimiento: value, lote: defaultLote })
-    setLastVisualizador({ establecimiento: value, lote: defaultLote })
+    const defaultLote = APPLY_IOS_DEFAULTS ? lotes[0] : undefined
+    updateVisualizador({ establecimiento: value, lote: defaultLote ?? null })
   }
 
-  const setLote = (value: string) => {
-    router.setParams({ lote: value })
-    setLastVisualizador({ lote: value })
-  }
-
-  const setCultivo = (value: string) => {
-    router.setParams({ cultivo: value })
-    setLastVisualizador({ cultivo: value })
-  }
-
-  const defaultEstablecimiento = useOptionsDefaults ? options?.establecimientos?.[0] : undefined
+  const defaultEstablecimiento = APPLY_IOS_DEFAULTS ? options?.establecimientos?.[0] : undefined
 
   const state: VisualizadorState = {
     view,
     campania:
       params.campania ??
       last.campania ??
-      (useOptionsDefaults ? options?.campanias?.[0] : undefined),
+      (APPLY_IOS_DEFAULTS ? options?.campanias?.[0] : undefined),
     establecimiento: params.establecimiento ?? last.establecimiento ?? defaultEstablecimiento,
     lote:
       params.lote ??
       last.lote ??
-      (useOptionsDefaults && defaultEstablecimiento
+      (APPLY_IOS_DEFAULTS && defaultEstablecimiento
         ? options?.lotesByEstablecimiento?.[defaultEstablecimiento]?.[0]
         : undefined),
     cultivo:
-      params.cultivo ?? last.cultivo ?? (useOptionsDefaults ? options?.cultivos?.[0] : undefined),
+      params.cultivo ?? last.cultivo ?? (APPLY_IOS_DEFAULTS ? options?.cultivos?.[0] : undefined),
   }
 
   const requiredKeys = VIEW_REQUIRED_PARAMS[view]

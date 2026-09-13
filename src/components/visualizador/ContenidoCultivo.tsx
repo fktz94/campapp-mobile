@@ -1,8 +1,8 @@
 import { StyleSheet, Text } from 'react-native'
 
 import { colors, font, spacing } from '@/constants/theme'
+import { useVisualizadorContext } from '@/contexts/VisualizadorContext'
 import { useDatosPorCultivo } from '@/hooks/sheets/useDatosPorCultivo'
-import { useVisualizador } from '@/hooks/visualizador/useVisualizador'
 import { fmt } from '@/lib/helpers/visualizadorHelpers'
 import type { Card } from '@/lib/types/visualizador'
 import ContenidoVacio from './ContenidoVacio'
@@ -10,7 +10,7 @@ import InfoGrid from './InfoGrid'
 import LoteCard from './LoteCard'
 
 const ContenidoCultivo = () => {
-  const { campania, cultivo } = useVisualizador()
+  const { campania, cultivo } = useVisualizadorContext()
   const { data } = useDatosPorCultivo(campania ?? '', cultivo ?? '')
 
   if (!data || !data.lotes.length) return <ContenidoVacio type="cultivo" />

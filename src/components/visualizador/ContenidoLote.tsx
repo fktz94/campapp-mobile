@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native'
 
+import { useVisualizadorContext } from '@/contexts/VisualizadorContext'
 import { useDatosVisualizador } from '@/hooks/sheets/useDatosVisualizador'
-import { useVisualizador } from '@/hooks/visualizador/useVisualizador'
 import { fmt } from '@/lib/helpers/visualizadorHelpers'
 import type { Card } from '@/lib/types/visualizador'
 import Banner from './Banner'
@@ -11,7 +11,7 @@ import InfoGrid from './InfoGrid'
 import LaboresList from './LaboresList'
 
 const ContenidoLote = () => {
-  const { campania, establecimiento, lote } = useVisualizador()
+  const { campania, establecimiento, lote } = useVisualizadorContext()
   const { data } = useDatosVisualizador(campania ?? '', establecimiento ?? '', lote ?? '')
 
   if (!data) return <ContenidoVacio type="lote" />

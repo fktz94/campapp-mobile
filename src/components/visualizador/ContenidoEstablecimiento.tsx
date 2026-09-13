@@ -1,8 +1,8 @@
 import { StyleSheet, Text, View } from 'react-native'
 
 import { colors, font, spacing } from '@/constants/theme'
+import { useVisualizadorContext } from '@/contexts/VisualizadorContext'
 import { useDatosResumen } from '@/hooks/sheets/useDatosResumen'
-import { useVisualizador } from '@/hooks/visualizador/useVisualizador'
 import { fmt } from '@/lib/helpers/visualizadorHelpers'
 import type { Card } from '@/lib/types/visualizador'
 import ContenidoVacio from './ContenidoVacio'
@@ -10,7 +10,7 @@ import InfoGrid from './InfoGrid'
 import LoteCard from './LoteCard'
 
 const ContenidoEstablecimiento = () => {
-  const { campania, establecimiento } = useVisualizador()
+  const { campania, establecimiento } = useVisualizadorContext()
   const { data } = useDatosResumen(campania ?? '', establecimiento ?? '')
 
   if (!data || !data.lotes.length) return <ContenidoVacio type="establecimiento" />

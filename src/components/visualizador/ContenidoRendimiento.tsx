@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native'
 
 import { colors, font, radius, spacing } from '@/constants/theme'
+import { useVisualizadorContext } from '@/contexts/VisualizadorContext'
 import { useDatosCosecha } from '@/hooks/sheets/useDatosCosecha'
-import { useVisualizador } from '@/hooks/visualizador/useVisualizador'
 import type { Card } from '@/lib/types/visualizador'
 import ContenidoVacio from './ContenidoVacio'
 import InfoGrid from './InfoGrid'
 
 const ContenidoRendimiento = () => {
-  const { campania, establecimiento } = useVisualizador()
+  const { campania, establecimiento } = useVisualizadorContext()
   const { data, isLoading } = useDatosCosecha(campania ?? '', establecimiento ?? '')
 
   if (isLoading) return null
