@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native'
 
 import { colors, font, radius, spacing } from '@/constants/theme'
-import { InfoGridProps } from '@/lib/types/visualizador'
+import type { Card } from '@/lib/types/visualizador'
 
-const InfoGrid: React.FC<InfoGridProps> = ({ cards }) => {
+const InfoGrid = ({ cards }: { cards: Card[] }) => {
   return (
     <View style={s.infoGrid}>
       {cards.map((card, cardIndex) => (

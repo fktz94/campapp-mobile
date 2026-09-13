@@ -1,4 +1,4 @@
-import { Bloque } from '../types/sheets'
+import type { Bloque } from '../types/visualizador'
 import { parseFechaToNum } from './date'
 
 export function groupLaboresIntoBloques(

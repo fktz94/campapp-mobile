@@ -1,9 +1,9 @@
-import { colors, font, radius, spacing } from '@/constants/theme'
+import { useEffect, useRef, useState } from 'react'
 import { Animated, LayoutChangeEvent, Pressable, StyleSheet, Text, View } from 'react-native'
 
+import { colors, font, radius, spacing } from '@/constants/theme'
 import { fmt } from '@/lib/helpers/visualizadorHelpers'
-import { Bloque } from '@/lib/types/visualizador'
-import { useEffect, useRef, useState } from 'react'
+import type { Bloque } from '@/lib/types/visualizador'
 
 const LaborBody = ({ b }: { b: Bloque }) => {
   const [isOpened, setIsOpened] = useState(false)

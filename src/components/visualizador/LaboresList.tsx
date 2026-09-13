@@ -1,6 +1,7 @@
-import { colors, spacing } from '@/constants/theme'
-import { Bloque } from '@/lib/types/visualizador'
 import { StyleSheet, Text } from 'react-native'
+
+import { colors, spacing } from '@/constants/theme'
+import type { Bloque } from '@/lib/types/visualizador'
 import LaborBody from './LaborBody'
 
 const LaboresList = ({ bloques }: { bloques: Bloque[] }) => {

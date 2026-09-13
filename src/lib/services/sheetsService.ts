@@ -2,10 +2,6 @@ import { col } from '@/lib/helpers/sheetsUtils'
 import { request } from '@/lib/sheetsApi'
 import type { ListasData, Rotacion } from '@/lib/types/sheets'
 
-// ─────────────────────────────────────────────────────────────
-// I/O: dos grupos
-// ─────────────────────────────────────────────────────────────
-
 type BatchGetResponse = {
   valueRanges: { range: string; values?: string[][] }[]
 }
@@ -39,10 +35,6 @@ export async function fetchOperativoRaw(): Promise<OperativoRaw> {
   const [labores, cosecha] = await batchGet(OPERATIVO_RANGES)
   return { labores, cosecha }
 }
-
-// ─────────────────────────────────────────────────────────────
-// Parsers puros
-// ─────────────────────────────────────────────────────────────
 
 export function parseListas(rows: string[][]): ListasData {
   return {

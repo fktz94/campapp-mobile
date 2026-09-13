@@ -2,7 +2,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { Platform } from 'react-native'
 
 import { VIEW_REQUIRED_PARAMS, VIEWS } from '@/constants/views'
-import {
+import type {
   VisualizadorState,
   VisualizadorURLParams,
   VisualizadorView,

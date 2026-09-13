@@ -1,5 +1,5 @@
-import { ListasData, Rotacion } from '../types/sheets'
-import { FilterOptions, VisualizadorView } from '../types/visualizador'
+import type { ListasData, Rotacion } from '../types/sheets'
+import type { FilterOptions, VisualizadorView } from '../types/visualizador'
 
 export const getMissingParamsMessage = (view: VisualizadorView, params: Record<string, any>) => {
   const required: Record<VisualizadorView, string[]> = {
