@@ -1,27 +1,25 @@
-import { ActivityIndicator, StyleSheet, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 
 import { useVisualizadorContext } from '@/contexts/VisualizadorContext'
 import { useDatosVisualizador } from '@/hooks/sheets/useDatosVisualizador'
 import { fmt } from '@/lib/helpers/visualizadorHelpers'
 import type { Card } from '@/lib/types/visualizador'
 import Banner from './Banner'
-import ContenidoVacio from './ContenidoVacio'
+import ContenidoGuard from './ContenidoGuard'
 import CultivoAntecesor from './CultivoAntecesor'
 import InfoGrid from './InfoGrid'
 import LaboresList from './LaboresList'
-import SeleccionarFiltros from './SeleccionarFiltros'
 
 const ContenidoLote = () => {
-  const { campania, establecimiento, lote, isComplete } = useVisualizadorContext()
+  const { campania, establecimiento, lote } = useVisualizadorContext()
   const { data, isLoading } = useDatosVisualizador(
     campania ?? '',
     establecimiento ?? '',
     lote ?? ''
   )
 
-  if (isLoading) return <ActivityIndicator />
-  if (!isComplete) return <SeleccionarFiltros />
-  if (!data) return <ContenidoVacio type="lote" />
+  if (isLoading || !data)
+    return <ContenidoGuard isLoading={isLoading} hasData={!!data} view="lote" />
 
   const infoCards: Card[] = [
     {

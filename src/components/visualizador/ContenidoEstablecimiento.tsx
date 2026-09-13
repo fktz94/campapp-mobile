@@ -1,22 +1,22 @@
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 
 import { colors, font, spacing } from '@/constants/theme'
 import { useVisualizadorContext } from '@/contexts/VisualizadorContext'
 import { useDatosResumen } from '@/hooks/sheets/useDatosResumen'
 import { fmt } from '@/lib/helpers/visualizadorHelpers'
 import type { Card } from '@/lib/types/visualizador'
-import ContenidoVacio from './ContenidoVacio'
+import ContenidoGuard from './ContenidoGuard'
 import InfoGrid from './InfoGrid'
 import LoteCard from './LoteCard'
-import SeleccionarFiltros from './SeleccionarFiltros'
 
 const ContenidoEstablecimiento = () => {
-  const { campania, establecimiento, isComplete } = useVisualizadorContext()
+  const { campania, establecimiento } = useVisualizadorContext()
   const { data, isLoading } = useDatosResumen(campania ?? '', establecimiento ?? '')
 
-  if (isLoading) return <ActivityIndicator />
-  if (!isComplete) return <SeleccionarFiltros />
-  if (!data || !data.lotes.length) return <ContenidoVacio type="establecimiento" />
+  if (isLoading || !data?.lotes.length)
+    return (
+      <ContenidoGuard isLoading={isLoading} hasData={!!data?.lotes.length} view="establecimiento" />
+    )
 
   const infoCards: Card[] = [
     { value: fmt(data.totalHa), label: 'Hectáreas totales' },

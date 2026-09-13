@@ -1,20 +1,20 @@
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 
 import { colors, font, radius, spacing } from '@/constants/theme'
 import { useVisualizadorContext } from '@/contexts/VisualizadorContext'
 import { useDatosCosecha } from '@/hooks/sheets/useDatosCosecha'
 import type { Card } from '@/lib/types/visualizador'
-import ContenidoVacio from './ContenidoVacio'
+import ContenidoGuard from './ContenidoGuard'
 import InfoGrid from './InfoGrid'
-import SeleccionarFiltros from './SeleccionarFiltros'
 
 const ContenidoRendimiento = () => {
-  const { campania, establecimiento, isComplete } = useVisualizadorContext()
+  const { campania, establecimiento } = useVisualizadorContext()
   const { data, isLoading } = useDatosCosecha(campania ?? '', establecimiento ?? '')
 
-  if (isLoading) return <ActivityIndicator />
-  if (!isComplete) return <SeleccionarFiltros />
-  if (!data || !data.lotes.length) return <ContenidoVacio type="rendimiento" />
+  if (isLoading || !data?.lotes.length)
+    return (
+      <ContenidoGuard isLoading={isLoading} hasData={!!data?.lotes.length} view="rendimiento" />
+    )
 
   const infoCards: Card[] = [
     { value: data.lotes.length, label: 'Lotes cosechados' },
