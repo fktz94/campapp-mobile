@@ -1,5 +1,6 @@
 import type { Bloque } from '../types/visualizador'
 import { parseFechaToNum } from './date'
+import { isSameText } from './text'
 
 export function groupLaboresIntoBloques(
   laboresRows: string[][],
@@ -48,7 +49,8 @@ export function groupLaboresIntoBloques(
       order.push(key)
     }
     const block = bloquesMap[key]
-    if (producto === 'Servicio') {
+
+    if (isSameText(producto, 'Servicio')) {
       block.tieneServicio = true
       if (proveedor && !block.provServicio) block.provServicio = proveedor
       if (observaciones && !block.observaciones) block.observaciones = observaciones

@@ -79,7 +79,7 @@ export function ChipSelect<T extends string>({ options, value, onChange }: Props
             }
           }}
         >
-          <Text style={[s.txt, value === o.value && s.txtOn]}>{o.label}</Text>
+          <Text style={[s.txt, value === o.value && s.txtOn]}>Por {o.label.toLowerCase()}</Text>
         </Pressable>
       ))}
     </ScrollView>

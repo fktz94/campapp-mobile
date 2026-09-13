@@ -8,8 +8,8 @@ export const VIEW_REQUIRED_PARAMS: Record<VisualizadorView, VisualizadorParamKey
 }
 
 export const VIEWS = [
-  { label: 'Lotes', value: 'lote' },
-  { label: 'Establecimientos', value: 'establecimiento' },
-  { label: 'Cultivos', value: 'cultivo' },
+  { label: 'Lote', value: 'lote' },
+  { label: 'Establecimiento', value: 'establecimiento' },
+  { label: 'Cultivo', value: 'cultivo' },
   { label: 'Rendimiento', value: 'rendimiento' },
 ] as const

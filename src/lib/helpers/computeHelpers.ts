@@ -1,12 +1,13 @@
 import { parseFechaToNum } from '@/lib/helpers/date'
 import { computeCosechaTotals, groupLaboresIntoBloques } from '@/lib/helpers/laboresHelpers'
-import { Rotacion } from '../types/sheets'
-
-export type FuenteDatos = {
-  rotaciones: Rotacion[]
-  laboresRows: string[][]
-  cosechaRows: string[][]
-}
+import type {
+  FuenteDatos,
+  LoteAcc,
+  LoteAccPorCultivo,
+  RotMapEntry,
+  RotMapEntryPorCultivo,
+} from '../types/sheets'
+import { isSameText } from './text'
 
 export function computeDatosVisualizador(
   { rotaciones, laboresRows, cosechaRows }: FuenteDatos,
@@ -29,7 +30,7 @@ export function computeDatosVisualizador(
   }
 
   const bloques = groupLaboresIntoBloques(laboresRows, campania, establecimiento, lote)
-  const siembraBlock = bloques.find((b) => b.labor === 'Siembra')
+  const siembraBlock = bloques.find((b) => isSameText(b.labor, 'Siembra'))
   const fechaSiembra = siembraBlock?.fechaReal || null
   const fechaSiembraPlan = siembraBlock?.fecha || null
 
@@ -55,7 +56,7 @@ export function computeDatosResumen(
   campania: string,
   establecimiento: string
 ) {
-  const rotMap: Record<string, any> = {}
+  const rotMap: Record<string, RotMapEntry> = {}
   rotaciones
     .filter((r) => r.establecimiento === establecimiento)
     .forEach((r) => {
@@ -67,13 +68,13 @@ export function computeDatosResumen(
       }
     })
 
-  const lotesData: Record<string, any> = {}
+  const lotesData: Record<string, LoteAcc> = {}
   Object.keys(rotMap).forEach((lote) => {
     lotesData[lote] = {
       lote,
       cultivo: rotMap[lote].cultivo,
       superficie: rotMap[lote].superficie, // number
-      bloqueMap: {} as Record<string, any>,
+      bloqueMap: {},
       fechaSiembra: null,
       fechaSiembraPlan: null,
       cultivoAntecesor: '',
@@ -93,14 +94,14 @@ export function computeDatosResumen(
     const fecha = row[5] || ''
     const labor = row[6] || ''
     const fechaReal = row[16] || ''
-    if (labor && labor.toLowerCase() !== 'servicio') {
+    if (labor && !isSameText(labor, 'Servicio')) {
       const key = `${fecha}||${labor}`
       if (!lotesData[lote].bloqueMap[key]) {
         lotesData[lote].bloqueMap[key] = { fecha, labor, fechaReal: fechaReal || '' }
       } else if (fechaReal && !lotesData[lote].bloqueMap[key].fechaReal) {
         lotesData[lote].bloqueMap[key].fechaReal = fechaReal
       }
-      if (labor === 'Siembra') {
+      if (isSameText(labor, 'Siembra')) {
         if (!lotesData[lote].fechaSiembraPlan) lotesData[lote].fechaSiembraPlan = fecha
         if (fechaReal && !lotesData[lote].fechaSiembra) lotesData[lote].fechaSiembra = fechaReal
       }
@@ -132,10 +133,10 @@ export function computeDatosResumen(
       if (kg > 0) cosechaMap[lote] = (cosechaMap[lote] || 0) + kg
     })
 
-  const resultLotes = Object.values(lotesData).map((l: any) => {
-    const sup: number = l.superficie
+  const resultLotes = Object.values(lotesData).map((l) => {
+    const sup = l.superficie
     const bloques = Object.values(l.bloqueMap).sort(
-      (a: any, b: any) => parseFechaToNum(b.fecha) - parseFechaToNum(a.fecha)
+      (a, b) => parseFechaToNum(b.fecha) - parseFechaToNum(a.fecha)
     )
     const rendimientoKgHa =
       cosechaMap[l.lote] && sup > 0 ? Math.round(cosechaMap[l.lote] / sup) : null
@@ -144,7 +145,7 @@ export function computeDatosResumen(
       cultivo: l.cultivo,
       superficie: sup, // number
       cantidadAplicaciones: bloques.length,
-      ultimasLabores: bloques.slice(0, 3).map((b: any) => ({
+      ultimasLabores: bloques.slice(0, 3).map((b) => ({
         fecha: b.fecha,
         labor: b.labor,
         fechaReal: b.fechaReal || '',
@@ -177,7 +178,7 @@ export function computeDatosPorCultivo(
   campania: string,
   cultivo: string
 ) {
-  const rotMap: Record<string, any> = {}
+  const rotMap: Record<string, RotMapEntryPorCultivo> = {}
   rotaciones.forEach((r) => {
     const key = r.establecimiento + '||' + r.lote
     rotMap[key] = {
@@ -190,11 +191,11 @@ export function computeDatosPorCultivo(
 
   const loteKeys = Object.keys(rotMap).filter((key) => rotMap[key].campañas[campania] === cultivo)
   if (loteKeys.length === 0) {
-    return { ok: true as const, lotes: [], totalHa: 0, establecimientos: 0 }
+    return { lotes: [], totalHa: 0, establecimientos: 0 }
   }
 
   const establecimientosSet = new Set<string>()
-  const lotesData: Record<string, any> = {}
+  const lotesData: Record<string, LoteAccPorCultivo> = {}
   loteKeys.forEach((key) => {
     const [est, lote] = key.split('||')
     const rot = rotMap[key]
@@ -223,14 +224,14 @@ export function computeDatosPorCultivo(
       const fecha = row[5] || ''
       const labor = row[6] || ''
       const fechaReal = row[16] || ''
-      if (labor && labor.toLowerCase() !== 'servicio') {
+      if (labor && !isSameText(labor, 'Servicio')) {
         const bKey = `${fecha}||${labor}`
         if (!lotesData[key].bloqueMap[bKey]) {
           lotesData[key].bloqueMap[bKey] = { fecha, labor, fechaReal: fechaReal || '' }
         } else if (fechaReal && !lotesData[key].bloqueMap[bKey].fechaReal) {
           lotesData[key].bloqueMap[bKey].fechaReal = fechaReal
         }
-        if (labor === 'Siembra') {
+        if (isSameText(labor, 'Siembra')) {
           if (!lotesData[key].fechaSiembraPlan) lotesData[key].fechaSiembraPlan = fecha
           if (fechaReal && !lotesData[key].fechaSiembra) lotesData[key].fechaSiembra = fechaReal
         }
@@ -264,9 +265,9 @@ export function computeDatosPorCultivo(
 
   const resultLotes = Object.keys(lotesData).map((key) => {
     const l = lotesData[key]
-    const sup: number = l.superficie
+    const sup = l.superficie
     const bloques = Object.values(l.bloqueMap).sort(
-      (a: any, b: any) => parseFechaToNum(b.fecha) - parseFechaToNum(a.fecha)
+      (a, b) => parseFechaToNum(b.fecha) - parseFechaToNum(a.fecha)
     )
     const rendimientoKgHa = cosechaMap[key] && sup > 0 ? Math.round(cosechaMap[key] / sup) : null
     return {
@@ -275,7 +276,7 @@ export function computeDatosPorCultivo(
       cultivo: l.cultivo,
       superficie: sup, // number
       cantidadAplicaciones: bloques.length,
-      ultimasLabores: bloques.slice(0, 3).map((b: any) => ({
+      ultimasLabores: bloques.slice(0, 3).map((b) => ({
         fecha: b.fecha,
         labor: b.labor,
         fechaReal: b.fechaReal || '',
