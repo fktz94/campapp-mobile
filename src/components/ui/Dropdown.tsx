@@ -11,8 +11,7 @@ interface Dropdown {
 }
 
 const Dropdown = (props: Dropdown) => {
-  const isAndroid = Platform.OS === 'android'
-  return isAndroid ? <AndroidDropdown {...props} /> : <IOSDropdown {...props} />
+  return Platform.OS === 'android' ? <AndroidDropdown {...props} /> : <IOSDropdown {...props} />
 }
 
 export default Dropdown

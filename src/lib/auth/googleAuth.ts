@@ -4,6 +4,7 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin'
 
+import { auth, signOut } from '@/lib/auth/firebaseAuth'
 import { useAppStore } from '@/store/app'
 
 export const restoreGoogleSession = async (): Promise<boolean> => {
@@ -39,5 +40,13 @@ export const getSheetsAccessToken = async (invalidToken?: string): Promise<strin
       throw new Error('SIGN_IN_REQUIRED')
     }
     throw e
+  }
+}
+
+export const forceFullSignOut = async () => {
+  try {
+    await signOut(auth)
+  } finally {
+    await GoogleSignin.signOut()
   }
 }

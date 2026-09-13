@@ -2,12 +2,6 @@ import { VIEWS } from '@/constants/views'
 
 export type VisualizadorView = (typeof VIEWS)[number]['value']
 
-export type VisualizadorContentProps =
-  | { view: 'lote'; campania: string; establecimiento: string; lote: string }
-  | { view: 'establecimiento'; campania: string; establecimiento: string }
-  | { view: 'cultivo'; campania: string; cultivo: string }
-  | { view: 'rendimiento'; campania: string; establecimiento: string }
-
 export type VisualizadorURLParams = {
   campania?: string
   cultivo?: string
@@ -71,19 +65,6 @@ export interface InfoGridProps {
   cards: Card[]
 }
 
-export type LoteResumen = {
-  lote: string
-  cultivo: string
-  superficie: string
-  cantidadAplicaciones: number
-  ultimasLabores: { fecha: string; labor: string; fechaReal: string }[]
-  fechaSiembra: string | null
-  fechaSiembraPlan: string | null
-  rendimientoKgHa: number | null
-  cultivoAntecesor: string
-  campañaAntecesor: string
-}
-
 export type CultivoResumenItem = {
   cultivo: string
   lotes: number
@@ -96,8 +77,15 @@ export type DatosResumen = {
   totalHa: number
   cultivoResumen: CultivoResumenItem[]
 }
-export type LotePorCultivo = {
-  establecimiento: string
+
+export type DatosPorCultivo = {
+  ok: boolean
+  lotes: LotePorCultivo[]
+  totalHa: number
+  establecimientos: number
+}
+
+type LoteBase = {
   lote: string
   cultivo: string
   superficie: string
@@ -110,9 +98,5 @@ export type LotePorCultivo = {
   campañaAntecesor: string
 }
 
-export type DatosPorCultivo = {
-  ok: boolean
-  lotes: LotePorCultivo[]
-  totalHa: number
-  establecimientos: number
-}
+export type LoteResumen = LoteBase
+export type LotePorCultivo = LoteBase & { establecimiento: string }

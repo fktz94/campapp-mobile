@@ -12,18 +12,11 @@ export type ListasData = {
 export type Rotacion = {
   establecimiento: string
   lote: string
-  has: string
+  has: number
   empresa: string
   campañas: Record<string, string>
 }
 
-export type ProductoEnBloque = {
-  producto: string
-  categoria: string
-  dosis: string
-  unidad: string
-  superficie: string
-}
 export type Producto = {
   producto: string
   categoria: string

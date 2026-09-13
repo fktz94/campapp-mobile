@@ -1,27 +1,19 @@
-import { useQuery } from '@tanstack/react-query'
 import { StyleSheet, Text } from 'react-native'
 
 import { colors, font, spacing } from '@/constants/theme'
+import { useDatosPorCultivo } from '@/hooks/sheets/useDatosPorCultivo'
 import { useVisualizador } from '@/hooks/visualizador/useVisualizador'
 import { fmt } from '@/lib/helpers/visualizadorHelpers'
-import { buildVisualizadorQuery } from '@/lib/services/visualizadorQueries'
-import { Card, DatosPorCultivo } from '@/lib/types/visualizador'
+import { Card } from '@/lib/types/visualizador'
+import ContenidoVacio from './ContenidoVacio'
 import InfoGrid from './InfoGrid'
 import LoteCard from './LoteCard'
 
 const ContenidoCultivo = () => {
   const { campania, cultivo } = useVisualizador()
+  const { data } = useDatosPorCultivo(campania ?? '', cultivo ?? '')
 
-  const { queryKey, queryFn } = buildVisualizadorQuery('cultivo', {
-    campania: campania ?? '',
-    establecimiento: '',
-    lote: '',
-    cultivo: cultivo ?? '',
-  })
-
-  const { data } = useQuery<DatosPorCultivo>({ queryKey, queryFn, enabled: false })
-
-  if (!data || !data.lotes.length) return null
+  if (!data || !data.lotes.length) return <ContenidoVacio type="cultivo" />
 
   const infoCards: Card[] = [
     { value: fmt(data.totalHa), label: 'Hectáreas' },
@@ -32,7 +24,6 @@ const ContenidoCultivo = () => {
   return (
     <>
       <InfoGrid cards={infoCards} />
-
       <Text style={s.sectionLabel}>Detalle por lote</Text>
       {data.lotes.map((l) => (
         <LoteCard

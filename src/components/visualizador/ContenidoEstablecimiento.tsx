@@ -1,27 +1,19 @@
-import { useQuery } from '@tanstack/react-query'
 import { StyleSheet, Text, View } from 'react-native'
 
 import { colors, font, spacing } from '@/constants/theme'
+import { useDatosResumen } from '@/hooks/sheets/useDatosResumen'
 import { useVisualizador } from '@/hooks/visualizador/useVisualizador'
 import { fmt } from '@/lib/helpers/visualizadorHelpers'
-import { buildVisualizadorQuery } from '@/lib/services/visualizadorQueries'
-import { Card, DatosResumen } from '@/lib/types/visualizador'
+import { Card } from '@/lib/types/visualizador'
+import ContenidoVacio from './ContenidoVacio'
 import InfoGrid from './InfoGrid'
 import LoteCard from './LoteCard'
 
 const ContenidoEstablecimiento = () => {
   const { campania, establecimiento } = useVisualizador()
+  const { data } = useDatosResumen(campania ?? '', establecimiento ?? '')
 
-  const { queryKey, queryFn } = buildVisualizadorQuery('establecimiento', {
-    campania: campania ?? '',
-    establecimiento: establecimiento ?? '',
-    lote: '',
-    cultivo: '',
-  })
-
-  const { data } = useQuery<DatosResumen>({ queryKey, queryFn, enabled: false })
-
-  if (!data || !data.lotes.length) return null
+  if (!data || !data.lotes.length) return <ContenidoVacio type="establecimiento" />
 
   const infoCards: Card[] = [
     { value: fmt(data.totalHa), label: 'Hectáreas totales' },

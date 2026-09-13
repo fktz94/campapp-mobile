@@ -26,7 +26,11 @@ export function buildFiltersOptions(
   })
 
   return {
-    campanias: listas.campanias.reverse(),
+    campanias: [...listas.campanias].sort((a, b) => {
+      const aYear = parseInt(a.split('/')[1] ?? '0')
+      const bYear = parseInt(b.split('/')[1] ?? '0')
+      return bYear - aYear
+    }),
     cultivos: cultivosRotacion.length ? cultivosRotacion : listas.cultivos,
     establecimientos,
     lotesByEstablecimiento,

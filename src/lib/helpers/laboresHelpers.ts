@@ -85,5 +85,5 @@ export function computeCosechaTotals(
     const kg = parseFloat((row[7] || '0').toString().replace(',', '.')) || 0
     totalKg += kg
   })
-  return { cosechaKg: totalKg, rendimientoKgHa: null } // rendimiento requires superficie
+  return { cosechaKg: totalKg, rendimientoKgHa: null }
 }

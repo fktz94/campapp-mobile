@@ -2,9 +2,8 @@ import { GoogleSignin, isSuccessResponse } from '@react-native-google-signin/goo
 import { useCallback } from 'react'
 
 import { formatGoogleSignInError } from '@/constants/authErrors'
-import { forceFullSignOut } from '@/lib/auth/authOrchestation'
 import { auth, GoogleAuthProvider, signInWithCredential } from '@/lib/auth/firebaseAuth'
-import { getSheetsAccessToken } from '@/lib/auth/googleAuth'
+import { forceFullSignOut, getSheetsAccessToken } from '@/lib/auth/googleAuth'
 import { useAppStore } from '@/store/app'
 
 const useAuth = () => {

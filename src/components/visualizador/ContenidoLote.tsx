@@ -1,28 +1,20 @@
-import { useQuery } from '@tanstack/react-query'
 import { StyleSheet, View } from 'react-native'
 
+import { useDatosVisualizador } from '@/hooks/sheets/useDatosVisualizador'
 import { useVisualizador } from '@/hooks/visualizador/useVisualizador'
 import { fmt } from '@/lib/helpers/visualizadorHelpers'
-import { buildVisualizadorQuery } from '@/lib/services/visualizadorQueries'
-import { Card, DatosVisualizador } from '@/lib/types/visualizador'
+import { Card } from '@/lib/types/visualizador'
 import Banner from './Banner'
+import ContenidoVacio from './ContenidoVacio'
 import CultivoAntecesor from './CultivoAntecesor'
 import InfoGrid from './InfoGrid'
 import LaboresList from './LaboresList'
 
 const ContenidoLote = () => {
   const { campania, establecimiento, lote } = useVisualizador()
+  const { data } = useDatosVisualizador(campania ?? '', establecimiento ?? '', lote ?? '')
 
-  const { queryKey, queryFn } = buildVisualizadorQuery('lote', {
-    campania: campania ?? '',
-    establecimiento: establecimiento ?? '',
-    lote: lote ?? '',
-    cultivo: '',
-  })
-
-  const { data } = useQuery<DatosVisualizador>({ queryKey, queryFn, enabled: false })
-
-  if (!data) return null
+  if (!data) return <ContenidoVacio type="lote" />
 
   const infoCards: Card[] = [
     {

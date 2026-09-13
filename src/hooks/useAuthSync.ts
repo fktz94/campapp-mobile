@@ -2,9 +2,8 @@ import { onAuthStateChanged } from '@react-native-firebase/auth'
 import { useEffect } from 'react'
 
 import { formatGoogleSignInError } from '@/constants/authErrors'
-import { forceFullSignOut } from '@/lib/auth/authOrchestation'
 import { auth } from '@/lib/auth/firebaseAuth'
-import { getSheetsAccessToken, restoreGoogleSession } from '@/lib/auth/googleAuth'
+import { forceFullSignOut, getSheetsAccessToken, restoreGoogleSession } from '@/lib/auth/googleAuth'
 import { useAppStore } from '@/store/app'
 
 export const useAuthSync = () => {

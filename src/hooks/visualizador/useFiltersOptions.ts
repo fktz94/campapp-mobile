@@ -1,22 +1,16 @@
-import { useQuery } from '@tanstack/react-query'
+// hooks/useFiltersOptions.ts
+import { useMemo } from 'react'
 
 import { buildFiltersOptions } from '@/lib/helpers/visualizadorHelpers'
-import { fetchCultivosRotacion, fetchListas, fetchRotaciones } from '@/lib/services/sheetsService'
+import { useCatalogos } from '../sheets/useCatalogos'
 
-function useFiltersOptions() {
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['filterOptions'],
-    queryFn: async () => {
-      const [rotaciones, listas, cultivosRotacion] = await Promise.all([
-        fetchRotaciones(),
-        fetchListas(),
-        fetchCultivosRotacion(),
-      ])
-      return buildFiltersOptions(rotaciones, listas, cultivosRotacion)
-    },
-  })
+export default function useFiltersOptions() {
+  const { data, isLoading, isFetching, error, refetch } = useCatalogos()
 
-  return { data, isLoading, error }
+  const options = useMemo(() => {
+    if (!data) return undefined
+    return buildFiltersOptions(data.rotaciones, data.listas, data.cultivosRotacion)
+  }, [data])
+
+  return { data: options, isLoading, isFetching, error, refetch }
 }
-
-export default useFiltersOptions

@@ -1,11 +1,15 @@
-import { router, Stack } from 'expo-router'
+import { Ionicons } from '@expo/vector-icons'
+import { Href, router, Stack } from 'expo-router'
 import { FlatList, View } from 'react-native'
 
-import { MenuCard } from '@/components/ui/MenuCard'
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable'
+import { MenuCard, MenuCardProps } from '@/components/ui/MenuCard'
 import { Screen } from '@/components/ui/Screen'
-import SettingsPressable from '@/components/ui/SettingsPressable'
 import { spacing } from '@/constants/theme'
-import { MenuCardListItem } from '@/lib/types/common'
+
+type MenuCardListItem = Omit<MenuCardProps, 'onPress'> & {
+  href: Href
+}
 
 const CARDS: MenuCardListItem[] = [
   {
@@ -21,16 +25,12 @@ export default function HomeScreen() {
     <>
       <Stack.Screen
         options={{
-          title: 'CampApp',
-          headerRight(props) {
-            return (
-              <SettingsPressable
-                color={props.tintColor}
-                size={22}
-                onPress={() => router.push('/settings')}
-              />
-            )
-          },
+          title: 'CampoApp',
+          headerRight: (props) => (
+            <AnimatedPressable onPress={() => router.push('/settings')}>
+              <Ionicons name="settings-outline" size={22} color={props.tintColor} />
+            </AnimatedPressable>
+          ),
         }}
       />
       <Screen>

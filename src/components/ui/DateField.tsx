@@ -1,13 +1,17 @@
 import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
-import { Platform } from 'react-native'
+import { Platform, StyleSheet, Text } from 'react-native'
 
+import { colors, font, spacing } from '@/constants/theme'
 import { Button } from './Button'
-import { Label } from './Label'
 
 interface Props {
   label: string
   value: Date
   onChange: (date: Date) => void
+}
+
+export function Label({ children }: { children: string }) {
+  return <Text style={s.label}>{children}</Text>
 }
 
 export function DateField({ label, value, onChange }: Props) {
@@ -48,3 +52,13 @@ export function DateField({ label, value, onChange }: Props) {
     </>
   )
 }
+
+const s = StyleSheet.create({
+  label: {
+    fontSize: font.sm,
+    fontWeight: '600',
+    color: colors.textSecondary,
+    marginTop: spacing.md,
+    marginBottom: spacing.xs,
+  },
+})

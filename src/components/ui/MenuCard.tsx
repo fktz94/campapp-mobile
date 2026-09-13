@@ -3,7 +3,13 @@ import { StyleSheet, Text, View } from 'react-native'
 
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable'
 import { colors, font, radius, spacing } from '@/constants/theme'
-import { MenuCardProps } from '@/lib/types/common'
+
+export interface MenuCardProps {
+  title: string
+  description?: string
+  icon: keyof typeof Ionicons.glyphMap
+  onPress: () => void
+}
 
 export function MenuCard({ title, description, icon, onPress }: MenuCardProps) {
   return (
