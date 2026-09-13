@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
 
 import { colors, font, radius, spacing } from '@/constants/theme'
 import { useVisualizadorContext } from '@/contexts/VisualizadorContext'
@@ -6,12 +6,14 @@ import { useDatosCosecha } from '@/hooks/sheets/useDatosCosecha'
 import type { Card } from '@/lib/types/visualizador'
 import ContenidoVacio from './ContenidoVacio'
 import InfoGrid from './InfoGrid'
+import SeleccionarFiltros from './SeleccionarFiltros'
 
 const ContenidoRendimiento = () => {
-  const { campania, establecimiento } = useVisualizadorContext()
+  const { campania, establecimiento, isComplete } = useVisualizadorContext()
   const { data, isLoading } = useDatosCosecha(campania ?? '', establecimiento ?? '')
 
-  if (isLoading) return null
+  if (isLoading) return <ActivityIndicator />
+  if (!isComplete) return <SeleccionarFiltros />
   if (!data || !data.lotes.length) return <ContenidoVacio type="rendimiento" />
 
   const infoCards: Card[] = [
@@ -81,11 +83,11 @@ const s = StyleSheet.create({
   },
   loteCard: {
     borderWidth: 1,
-    borderColor: '#e0ece0',
+    borderColor: colors.borderAccent,
     borderRadius: radius.md,
     padding: spacing.sm,
     marginBottom: spacing.sm,
-    backgroundColor: '#fafff8',
+    backgroundColor: colors.surfaceAccent,
   },
   loteHdr: {
     flexDirection: 'row',
@@ -140,7 +142,7 @@ const s = StyleSheet.create({
   },
   totalSub: {
     fontSize: font.sm,
-    color: '#c8e6c9',
+    color: colors.primaryBorder,
     marginTop: 4,
   },
 })

@@ -38,7 +38,7 @@ export function computeDatosVisualizador(
   const rendimientoKgHa = superficie > 0 ? Math.round(cosechaKg / superficie) : null
 
   return {
-    superficie, // number
+    superficie,
     cultivo: cultivoRot,
     cultivoAntecesor,
     campañaAntecesor,
@@ -63,7 +63,7 @@ export function computeDatosResumen(
       rotMap[r.lote] = {
         lote: r.lote,
         cultivo: r.campañas?.[campania] || '',
-        superficie: r.has, // number
+        superficie: r.has,
         campañas: r.campañas || {},
       }
     })
@@ -73,7 +73,7 @@ export function computeDatosResumen(
     lotesData[lote] = {
       lote,
       cultivo: rotMap[lote].cultivo,
-      superficie: rotMap[lote].superficie, // number
+      superficie: rotMap[lote].superficie,
       bloqueMap: {},
       fechaSiembra: null,
       fechaSiembraPlan: null,
@@ -143,7 +143,7 @@ export function computeDatosResumen(
     return {
       lote: l.lote,
       cultivo: l.cultivo,
-      superficie: sup, // number
+      superficie: sup,
       cantidadAplicaciones: bloques.length,
       ultimasLabores: bloques.slice(0, 3).map((b) => ({
         fecha: b.fecha,
@@ -184,7 +184,7 @@ export function computeDatosPorCultivo(
     rotMap[key] = {
       establecimiento: r.establecimiento,
       lote: r.lote,
-      superficie: r.has, // number
+      superficie: r.has,
       campañas: r.campañas || {},
     }
   })
@@ -204,7 +204,7 @@ export function computeDatosPorCultivo(
       establecimiento: est,
       lote,
       cultivo: rot.campañas[campania] || '',
-      superficie: rot.superficie, // number
+      superficie: rot.superficie,
       bloqueMap: {},
       fechaSiembra: null,
       fechaSiembraPlan: null,
@@ -274,7 +274,7 @@ export function computeDatosPorCultivo(
       establecimiento: l.establecimiento,
       lote: l.lote,
       cultivo: l.cultivo,
-      superficie: sup, // number
+      superficie: sup,
       cantidadAplicaciones: bloques.length,
       ultimasLabores: bloques.slice(0, 3).map((b) => ({
         fecha: b.fecha,
@@ -305,7 +305,7 @@ export function computeDatosCosecha(
   rotaciones
     .filter((r) => r.establecimiento === establecimiento)
     .forEach((r) => {
-      supMap[r.lote] = r.has // number
+      supMap[r.lote] = r.has
     })
 
   const loteMap: Record<

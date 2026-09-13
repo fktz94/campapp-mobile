@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
 
 import { colors, font, spacing } from '@/constants/theme'
 import { useVisualizadorContext } from '@/contexts/VisualizadorContext'
@@ -8,11 +8,14 @@ import type { Card } from '@/lib/types/visualizador'
 import ContenidoVacio from './ContenidoVacio'
 import InfoGrid from './InfoGrid'
 import LoteCard from './LoteCard'
+import SeleccionarFiltros from './SeleccionarFiltros'
 
 const ContenidoEstablecimiento = () => {
-  const { campania, establecimiento } = useVisualizadorContext()
-  const { data } = useDatosResumen(campania ?? '', establecimiento ?? '')
+  const { campania, establecimiento, isComplete } = useVisualizadorContext()
+  const { data, isLoading } = useDatosResumen(campania ?? '', establecimiento ?? '')
 
+  if (isLoading) return <ActivityIndicator />
+  if (!isComplete) return <SeleccionarFiltros />
   if (!data || !data.lotes.length) return <ContenidoVacio type="establecimiento" />
 
   const infoCards: Card[] = [
@@ -24,7 +27,6 @@ const ContenidoEstablecimiento = () => {
   return (
     <>
       <InfoGrid cards={infoCards} />
-
       {data.cultivoResumen.length > 0 && (
         <View style={s.section}>
           <Text style={s.sectionLabel}>Por cultivo</Text>
@@ -77,7 +79,7 @@ const s = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: spacing.xs,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: colors.surfacePressed,
   },
   cultivoNombre: { fontWeight: '700' },
   cultivoMeta: { fontSize: font.sm },

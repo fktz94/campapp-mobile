@@ -63,11 +63,11 @@ const LaborBody = ({ b }: { b: Bloque }) => {
 export default LaborBody
 
 const s = StyleSheet.create({
-  laborFecha: { fontSize: font.lg, fontWeight: '700', color: '#1a3a16' },
+  laborFecha: { fontSize: font.lg, fontWeight: '700', color: colors.textDark },
   laborLabor: {
     fontSize: font.sm,
     fontWeight: '500',
-    color: '#7a9970',
+    color: colors.textSubtle,
     textTransform: 'uppercase',
     letterSpacing: 0.3,
     marginTop: 2,
@@ -79,14 +79,14 @@ const s = StyleSheet.create({
     paddingVertical: 2,
     paddingHorizontal: 8,
   },
-  badgeOkText: { color: '#1b5e20', fontSize: font.sm - 3, fontWeight: '600' },
+  badgeOkText: { color: colors.primaryPressed, fontSize: font.sm - 3, fontWeight: '600' },
   badgePend: {
     backgroundColor: '#fff3e0',
     borderRadius: 20,
     paddingVertical: 2,
     paddingHorizontal: 8,
   },
-  badgePendText: { color: '#e65100', fontSize: font.sm - 3, fontWeight: '600' },
+  badgePendText: { color: colors.warningPressed, fontSize: font.sm - 3, fontWeight: '600' },
   prodRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -103,14 +103,14 @@ const s = StyleSheet.create({
   servicioTag: {
     alignSelf: 'flex-start',
     marginTop: spacing.xs,
-    backgroundColor: '#fff8e1',
+    backgroundColor: colors.highlightBg,
     borderWidth: 1,
-    borderColor: '#ffe082',
+    borderColor: colors.highlightBorder,
     borderRadius: 4,
     paddingVertical: 2,
     paddingHorizontal: 6,
   },
-  servicioText: { fontSize: font.sm - 2, color: '#795548' },
+  servicioText: { fontSize: font.sm - 2, color: colors.highlightText },
   metaRow: { marginTop: spacing.xs, flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   metaText: { fontSize: font.sm - 2, color: '#999' },
 })

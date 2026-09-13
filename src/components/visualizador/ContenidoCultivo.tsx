@@ -1,4 +1,4 @@
-import { StyleSheet, Text } from 'react-native'
+import { ActivityIndicator, StyleSheet, Text } from 'react-native'
 
 import { colors, font, spacing } from '@/constants/theme'
 import { useVisualizadorContext } from '@/contexts/VisualizadorContext'
@@ -8,11 +8,14 @@ import type { Card } from '@/lib/types/visualizador'
 import ContenidoVacio from './ContenidoVacio'
 import InfoGrid from './InfoGrid'
 import LoteCard from './LoteCard'
+import SeleccionarFiltros from './SeleccionarFiltros'
 
 const ContenidoCultivo = () => {
-  const { campania, cultivo } = useVisualizadorContext()
-  const { data } = useDatosPorCultivo(campania ?? '', cultivo ?? '')
+  const { campania, cultivo, isComplete } = useVisualizadorContext()
+  const { data, isLoading } = useDatosPorCultivo(campania ?? '', cultivo ?? '')
 
+  if (isLoading) return <ActivityIndicator />
+  if (!isComplete) return <SeleccionarFiltros />
   if (!data || !data.lotes.length) return <ContenidoVacio type="cultivo" />
 
   const infoCards: Card[] = [

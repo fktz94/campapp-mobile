@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 
+import { QUERY_KEYS } from '@/lib/queryKeys'
 import {
   fetchCatalogosRaw,
   parseCultivosRotacion,
@@ -16,7 +17,7 @@ export type Catalogos = {
 
 export function useCatalogos() {
   return useQuery<Catalogos>({
-    queryKey: ['catalogos'],
+    queryKey: [QUERY_KEYS.catalogos],
     queryFn: async () => {
       const raw = await fetchCatalogosRaw()
       return {
@@ -25,6 +26,6 @@ export function useCatalogos() {
         cultivosRotacion: parseCultivosRotacion(raw.cultivos),
       }
     },
-    staleTime: 24 * 60 * 60_000, // 24h — catálogos cambian muy poco
+    staleTime: 24 * 60 * 60_000,
   })
 }

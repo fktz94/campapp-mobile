@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
 
 import { colors, font, radius, spacing } from '@/constants/theme'
+import ExpandableCard from '../ui/ExpandableCard'
 
 type UltimaLabor = {
   fecha: string
@@ -34,15 +35,18 @@ const LoteCard = ({
   ultimasLabores = [],
 }: LoteCardProps) => {
   return (
-    <View style={s.loteCard}>
-      <View style={s.loteHdr}>
-        <Text style={s.loteNombre}>{title}</Text>
-        <Text style={s.loteMeta}>
-          {cultivo ? `${cultivo} · ` : ''}
-          <Text style={s.loteHa}>{superficie} ha</Text>
-        </Text>
-      </View>
-
+    <ExpandableCard
+      showAccent={false}
+      header={
+        <View style={s.loteHdr}>
+          <Text style={s.loteNombre}>{title}</Text>
+          <Text style={s.loteMeta}>
+            {cultivo ? `${cultivo} · ` : ''}
+            <Text style={s.loteHa}>{superficie} ha</Text>
+          </Text>
+        </View>
+      }
+    >
       <Text style={s.dato}>
         {cantidadAplicaciones} aplicacion{cantidadAplicaciones !== 1 ? 'es' : ''}
       </Text>
@@ -80,7 +84,7 @@ const LoteCard = ({
           ))}
         </>
       )}
-    </View>
+    </ExpandableCard>
   )
 }
 
@@ -89,11 +93,11 @@ export default LoteCard
 const s = StyleSheet.create({
   loteCard: {
     borderWidth: 1,
-    borderColor: '#e0ece0',
+    borderColor: colors.borderAccent,
     borderRadius: radius.md,
     padding: spacing.sm,
     marginBottom: spacing.sm,
-    backgroundColor: '#fafff8',
+    backgroundColor: colors.surfaceAccent,
   },
   loteHdr: {
     flexDirection: 'row',
