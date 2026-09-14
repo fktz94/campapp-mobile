@@ -13,6 +13,7 @@ const LaborBody = ({ b }: { b: Bloque }) => {
 
   return (
     <ExpandableCard
+      accentColor={!hecha ? colors.warning : undefined}
       header={
         <View style={{ flex: 1 }}>
           <Text style={s.laborFecha}>{hecha ? b.fechaReal : 'Pendiente'}</Text>

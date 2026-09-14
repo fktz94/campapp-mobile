@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 
-import { colors, font, radius, spacing } from '@/constants/theme'
+import { colors, font, spacing } from '@/constants/theme'
 import ExpandableCard from '../ui/ExpandableCard'
 
 type UltimaLabor = {
@@ -40,10 +40,12 @@ const LoteCard = ({
       header={
         <View style={s.loteHdr}>
           <Text style={s.loteNombre}>{title}</Text>
-          <Text style={s.loteMeta}>
-            {cultivo ? `${cultivo} · ` : ''}
-            <Text style={s.loteHa}>{superficie} ha</Text>
-          </Text>
+          <View>
+            <Text style={s.loteMeta}>
+              {cultivo ? `${cultivo} · ` : ''}
+              <Text style={s.loteHa}>{superficie} ha</Text>
+            </Text>
+          </View>
         </View>
       }
     >
@@ -91,19 +93,9 @@ const LoteCard = ({
 export default LoteCard
 
 const s = StyleSheet.create({
-  loteCard: {
-    borderWidth: 1,
-    borderColor: colors.borderAccent,
-    borderRadius: radius.md,
-    padding: spacing.sm,
-    marginBottom: spacing.sm,
-    backgroundColor: colors.surfaceAccent,
-  },
   loteHdr: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    flexWrap: 'wrap',
-    marginBottom: spacing.xs,
+    flexDirection: 'column',
+    gap: spacing.xs,
   },
   loteNombre: { fontWeight: '700', color: colors.primary, fontSize: font.md },
   loteMeta: { fontSize: font.sm, color: colors.textSecondary },

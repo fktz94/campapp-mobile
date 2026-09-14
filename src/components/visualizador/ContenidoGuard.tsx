@@ -12,8 +12,9 @@ interface Props {
 }
 
 function ContenidoGuard({ isLoading, hasData, view }: Props) {
-  const { isComplete } = useVisualizadorContext()
+  const { isComplete, filtersLoading } = useVisualizadorContext()
 
+  if (filtersLoading) return null
   if (isLoading) return <ActivityIndicator />
   if (!isComplete) return <SeleccionarFiltros />
   if (!hasData) return <ContenidoVacio type={view} />

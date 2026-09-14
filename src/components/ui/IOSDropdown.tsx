@@ -1,5 +1,5 @@
 import { Host, Picker, Text as SwiftText } from '@expo/ui/swift-ui'
-import { pickerStyle, tag } from '@expo/ui/swift-ui/modifiers'
+import { frame, lineLimit, pickerStyle, tag, truncationMode } from '@expo/ui/swift-ui/modifiers'
 import { StyleSheet, Text, View } from 'react-native'
 
 import { colors, font, spacing } from '@/constants/theme'
@@ -18,7 +18,10 @@ export default function iOSDropdown({ onChangeValue, selectedValue, values, labe
           }}
         >
           {values.map((val) => (
-            <SwiftText key={val} modifiers={[tag(val)]}>
+            <SwiftText
+              key={val}
+              modifiers={[tag(val), frame({ maxWidth: 160 }), lineLimit(1), truncationMode('tail')]}
+            >
               {val}
             </SwiftText>
           ))}

@@ -19,7 +19,7 @@ const ContenidoEstablecimiento = () => {
     )
 
   const infoCards: Card[] = [
-    { value: fmt(data.totalHa), label: 'Hectáreas totales' },
+    { value: fmt(data.totalHa), label: 'Hectáreas' },
     { value: data.lotes.length, label: 'Lotes activos' },
     { value: data.cultivoResumen.length, label: 'Cultivos' },
   ]

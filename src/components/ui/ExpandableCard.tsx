@@ -10,6 +10,10 @@ type ExpandableCardProps = {
   accentColorPressed?: string
   showAccent?: boolean
   defaultOpen?: boolean
+  headerBackgroundColor?: string
+  headerBackgroundColorPressed?: string
+  bodyBackgroundColor?: string
+  bodyBackgroundColorPressed?: string
 }
 
 const ExpandableCard = ({
@@ -19,6 +23,10 @@ const ExpandableCard = ({
   accentColorPressed,
   showAccent = true,
   defaultOpen = false,
+  headerBackgroundColor = colors.surface,
+  headerBackgroundColorPressed = colors.surfacePressed,
+  bodyBackgroundColor = colors.surface,
+  bodyBackgroundColorPressed = colors.surfacePressed,
 }: ExpandableCardProps) => {
   const [isOpened, setIsOpened] = useState(defaultOpen)
   const [contentHeight, setContentHeight] = useState(0)
@@ -29,6 +37,8 @@ const ExpandableCard = ({
   const pressProgress = useRef(new Animated.Value(0)).current
 
   const pressedAccent = accentColorPressed ?? accentColor
+  const headerPressed = headerBackgroundColorPressed ?? headerBackgroundColor
+  const bodyPressed = bodyBackgroundColorPressed ?? bodyBackgroundColor
 
   const onPressIn = () => {
     Animated.timing(pressProgress, { toValue: 1, duration: 200, useNativeDriver: false }).start()
@@ -74,13 +84,7 @@ const ExpandableCard = ({
       <Animated.View
         style={[
           s.card,
-          {
-            backgroundColor: pressProgress.interpolate({
-              inputRange: [0, 1],
-              outputRange: [colors.surface, colors.surfacePressed],
-            }),
-            transform: [{ scale: scaleAnim }],
-          },
+          { transform: [{ scale: scaleAnim }] },
           showAccent && {
             borderLeftWidth: 4,
             borderLeftColor: pressProgress.interpolate({
@@ -93,15 +97,38 @@ const ExpandableCard = ({
         <View style={s.hiddenMeasurer} onLayout={handleMeasure} pointerEvents="none">
           <View style={s.body}>{children}</View>
         </View>
-        <View style={s.header}>{header}</View>
+
+        <Animated.View
+          style={[
+            s.header,
+            {
+              backgroundColor: pressProgress.interpolate({
+                inputRange: [0, 1],
+                outputRange: [headerBackgroundColor, headerPressed],
+              }),
+            },
+          ]}
+        >
+          {header}
+        </Animated.View>
+
         <Animated.View style={[s.bodyWrapper, { height: heightAnim, opacity: opacityAnim }]}>
-          <View style={s.body}>{children}</View>
+          <View style={s.separator} />
+          <Animated.View
+            style={{
+              backgroundColor: pressProgress.interpolate({
+                inputRange: [0, 1],
+                outputRange: [bodyBackgroundColor, bodyPressed],
+              }),
+            }}
+          >
+            <View style={s.body}>{children}</View>
+          </Animated.View>
         </Animated.View>
       </Animated.View>
     </Pressable>
   )
 }
-
 export default ExpandableCard
 
 const s = StyleSheet.create({
@@ -118,7 +145,12 @@ const s = StyleSheet.create({
   },
   body: {
     paddingHorizontal: spacing.md,
-    paddingBottom: spacing.md,
+    paddingVertical: spacing.md,
+  },
+  separator: {
+    borderTopWidth: 1,
+    borderTopColor: colors.borderAccent,
+    marginHorizontal: spacing.md,
   },
   hiddenMeasurer: {
     position: 'absolute',

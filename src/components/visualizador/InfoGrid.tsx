@@ -22,6 +22,8 @@ const InfoGrid = ({ cards }: { cards: Card[] }) => {
   )
 }
 
+export default InfoGrid
+
 const s = StyleSheet.create({
   infoGrid: {
     flexDirection: 'row',
@@ -35,18 +37,17 @@ const s = StyleSheet.create({
     borderColor: colors.primaryBorder,
     borderRadius: radius.md,
     alignItems: 'center',
-    maxWidth: '40%',
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.xs,
   },
 
   valueContainer: {
-    height: 40,
+    minHeight: 40,
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
   labelContainer: {
-    height: 20,
+    minHeight: 20,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 4,
@@ -73,5 +74,3 @@ const s = StyleSheet.create({
     paddingHorizontal: 5,
   },
 })
-
-export default InfoGrid
