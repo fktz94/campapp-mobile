@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "25081499532-3v451b7n6bqs8bc0hu27jocae121aqlk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ortiz.campapp",
+            "certificate_hash": "bc5202c71f4c7d097b15c3a2e701c6eec2222be7"
+          }
+        },
+        {
           "client_id": "25081499532-2jaedivj0gnehamdto881rcu7mq56bu4.apps.googleusercontent.com",
           "client_type": 3
         }
