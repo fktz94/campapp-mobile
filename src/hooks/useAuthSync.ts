@@ -4,11 +4,11 @@ import { useEffect } from 'react'
 import { formatGoogleSignInError } from '@/constants/authErrors'
 import { auth } from '@/lib/auth/firebaseAuth'
 import { forceFullSignOut, getSheetsAccessToken, restoreGoogleSession } from '@/lib/auth/googleAuth'
+import { showAuthError } from '@/lib/helpers/auth'
 import { useAppStore } from '@/store/app'
 
 export const useAuthSync = () => {
   const setUser = useAppStore((s) => s.setUser)
-  const setAuthError = useAppStore((s) => s.setAuthError)
   const setHydrated = useAppStore((s) => s.setHydrated)
   const setIsAuthenticating = useAppStore((s) => s.setIsAuthenticating)
 
@@ -25,11 +25,10 @@ export const useAuthSync = () => {
         if (!restored) throw new Error('Google session unavailable')
         await getSheetsAccessToken()
         setUser(firebaseUser)
-        setAuthError(null)
       } catch (error) {
         await forceFullSignOut()
         setUser(null)
-        setAuthError(formatGoogleSignInError(error))
+        showAuthError(formatGoogleSignInError(error))
       } finally {
         setIsAuthenticating(false)
         setHydrated(true)

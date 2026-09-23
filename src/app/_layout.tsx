@@ -3,6 +3,7 @@ import { Stack } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { useEffect } from 'react'
 import { StatusBar } from 'react-native'
+import Toast from 'react-native-toast-message'
 
 import Providers from '@/components/Providers'
 import { useAuthSync } from '@/hooks/useAuthSync'
@@ -36,6 +37,7 @@ export default function RootLayout() {
     <Providers>
       <StatusBar barStyle={'dark-content'} />
       <Stack screenOptions={{ headerShown: false }} />
+      <Toast />
     </Providers>
   )
 }

@@ -4,10 +4,10 @@ import { useCallback } from 'react'
 import { formatGoogleSignInError } from '@/constants/authErrors'
 import { auth, GoogleAuthProvider, signInWithCredential } from '@/lib/auth/firebaseAuth'
 import { forceFullSignOut, getSheetsAccessToken } from '@/lib/auth/googleAuth'
+import { showAuthError } from '@/lib/helpers/auth'
 import { useAppStore } from '@/store/app'
 
 const useAuth = () => {
-  const setAuthError = useAppStore((s) => s.setAuthError)
   const setIsAuthenticating = useAppStore((s) => s.setIsAuthenticating)
 
   const signIn = useCallback(async () => {
@@ -23,22 +23,17 @@ const useAuth = () => {
         const accessToken = await getSheetsAccessToken()
         const credential = GoogleAuthProvider.credential(idToken, accessToken)
         await signInWithCredential(auth, credential)
-        setAuthError(null)
       }
     } catch (error) {
-      setAuthError(formatGoogleSignInError(error))
+      showAuthError(formatGoogleSignInError(error))
     } finally {
       setIsAuthenticating(false)
     }
-  }, [setAuthError, setIsAuthenticating])
+  }, [setIsAuthenticating])
 
   const signOutUser = useCallback(async () => {
-    try {
-      await forceFullSignOut()
-    } finally {
-      setAuthError(null)
-    }
-  }, [setAuthError])
+    await forceFullSignOut()
+  }, [])
 
   return { signIn, signOut: signOutUser }
 }

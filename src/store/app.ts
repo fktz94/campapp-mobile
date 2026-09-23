@@ -4,7 +4,6 @@ import { create } from 'zustand'
 import { VisualizadorView } from '@/lib/types/visualizador'
 
 interface AppState {
-  authError: string | null
   campania: string | null
   establecimiento: string | null
   googleAccessToken: string | null
@@ -19,7 +18,6 @@ interface AppState {
   }
   user: User | null
 
-  setAuthError: (e: string | null) => void
   setCampania: (c: string) => void
   setEstablecimiento: (e: string) => void
   setGoogleAccessToken: (t: string | null) => void
@@ -30,7 +28,6 @@ interface AppState {
 }
 
 export const useAppStore = create<AppState>((set) => ({
-  authError: null,
   campania: null,
   establecimiento: null,
   googleAccessToken: null,
@@ -45,7 +42,6 @@ export const useAppStore = create<AppState>((set) => ({
   },
   user: null,
 
-  setAuthError: (authError) => set({ authError }),
   setCampania: (campania) => set({ campania }),
   setEstablecimiento: (establecimiento) => set({ establecimiento }),
   setGoogleAccessToken: (googleAccessToken) => set({ googleAccessToken }),
