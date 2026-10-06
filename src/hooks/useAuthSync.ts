@@ -1,39 +1,45 @@
-import { onAuthStateChanged } from '@react-native-firebase/auth'
 import { useEffect } from 'react'
 
-import { formatGoogleSignInError } from '@/constants/authErrors'
-import { auth } from '@/lib/auth/firebaseAuth'
-import { forceFullSignOut, getSheetsAccessToken, restoreGoogleSession } from '@/lib/auth/googleAuth'
-import { showAuthError } from '@/lib/helpers/auth'
+import { fetchProfile } from '@/lib/api/auth'
+import { clearSession } from '@/lib/auth/session'
 import { useAppStore } from '@/store/app'
+import { GoogleSignin } from '@react-native-google-signin/google-signin'
 
 export const useAuthSync = () => {
+  const setBackendToken = useAppStore((s) => s.setBackendToken)
   const setUser = useAppStore((s) => s.setUser)
   const setHydrated = useAppStore((s) => s.setHydrated)
-  const setIsAuthenticating = useAppStore((s) => s.setIsAuthenticating)
+  const setGoogleAccessToken = useAppStore((s) => s.setGoogleAccessToken)
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      if (!firebaseUser) {
+    const initSession = async () => {
+      const token = useAppStore.getState().backendToken
+
+      if (!token) {
         setUser(null)
         setHydrated(true)
         return
       }
-      setIsAuthenticating(true)
+
       try {
-        const restored = await restoreGoogleSession()
-        if (!restored) throw new Error('Google session unavailable')
-        await getSheetsAccessToken()
-        setUser(firebaseUser)
-      } catch (error) {
-        await forceFullSignOut()
-        setUser(null)
-        showAuthError(formatGoogleSignInError(error))
+        const { user, token: freshToken } = await fetchProfile()
+        if (freshToken) {
+          setBackendToken(freshToken)
+        }
+        setUser(user)
+
+        const tokens = await GoogleSignin.getTokens()
+
+        if (tokens?.accessToken) {
+          setGoogleAccessToken(tokens.accessToken)
+        }
+      } catch {
+        clearSession()
       } finally {
-        setIsAuthenticating(false)
         setHydrated(true)
       }
-    })
-    return unsubscribe
-  }, [])
+    }
+
+    initSession()
+  }, [setUser, setHydrated])
 }

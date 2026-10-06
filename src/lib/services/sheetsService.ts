@@ -1,19 +1,6 @@
+import { apiClient } from '@/lib/api/client'
 import { col } from '@/lib/helpers/sheetsUtils'
-import { request } from '@/lib/sheetsApi'
 import type { ListasData, Rotacion } from '@/lib/types/sheets'
-
-type BatchGetResponse = {
-  valueRanges: { range: string; values?: string[][] }[]
-}
-
-const CATALOGOS_RANGES = ['Listas!A:K', 'Cultivos!A:A', 'Rotaciones!A:Z'] as const
-const OPERATIVO_RANGES = ['Labores Consolidado!A:Q', 'Cosecha!A:K'] as const
-
-async function batchGet(ranges: readonly string[]): Promise<string[][][]> {
-  const query = ranges.map((r) => `ranges=${encodeURIComponent(r)}`).join('&')
-  const res = await request<BatchGetResponse>(`/values:batchGet?${query}`)
-  return ranges.map((_, i) => res.valueRanges[i]?.values ?? [])
-}
 
 export type CatalogosRaw = {
   listas: string[][]
@@ -27,13 +14,11 @@ export type OperativoRaw = {
 }
 
 export async function fetchCatalogosRaw(): Promise<CatalogosRaw> {
-  const [listas, cultivos, rotaciones] = await batchGet(CATALOGOS_RANGES)
-  return { listas, cultivos, rotaciones }
+  return apiClient.get<CatalogosRaw>('/sheets/catalogos')
 }
 
 export async function fetchOperativoRaw(): Promise<OperativoRaw> {
-  const [labores, cosecha] = await batchGet(OPERATIVO_RANGES)
-  return { labores, cosecha }
+  return apiClient.get<OperativoRaw>('/sheets/operativo')
 }
 
 export function parseListas(rows: string[][]): ListasData {

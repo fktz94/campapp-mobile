@@ -2,38 +2,55 @@ import { GoogleSignin, isSuccessResponse } from '@react-native-google-signin/goo
 import { useCallback } from 'react'
 
 import { formatGoogleSignInError } from '@/constants/authErrors'
-import { auth, GoogleAuthProvider, signInWithCredential } from '@/lib/auth/firebaseAuth'
-import { forceFullSignOut, getSheetsAccessToken } from '@/lib/auth/googleAuth'
+import { loginWithGoogle } from '@/lib/api/auth'
+import { clearSession } from '@/lib/auth/session'
 import { showAuthError } from '@/lib/helpers/auth'
 import { useAppStore } from '@/store/app'
 
 const useAuth = () => {
   const setIsAuthenticating = useAppStore((s) => s.setIsAuthenticating)
+  const setUser = useAppStore((s) => s.setUser)
+  const setBackendToken = useAppStore((s) => s.setBackendToken)
+  const setGoogleAccessToken = useAppStore((s) => s.setGoogleAccessToken)
 
   const signIn = useCallback(async () => {
     try {
       setIsAuthenticating(true)
       await GoogleSignin.hasPlayServices()
       const response = await GoogleSignin.signIn()
+
       if (isSuccessResponse(response)) {
         const idToken = response.data.idToken
-        if (!idToken) {
-          throw new Error('No ID token returned from Google Sign-In.')
+
+        const tokens = await GoogleSignin.getTokens()
+        const googleAccessToken = tokens.accessToken
+
+        if (!idToken || !googleAccessToken) {
+          throw new Error('No ID Token or Access Token returned.')
         }
-        const accessToken = await getSheetsAccessToken()
-        const credential = GoogleAuthProvider.credential(idToken, accessToken)
-        await signInWithCredential(auth, credential)
+
+        const { backendToken, user } = await loginWithGoogle(idToken)
+
+        setGoogleAccessToken(googleAccessToken)
+        setBackendToken(backendToken)
+        setUser(user)
       }
     } catch (error) {
       showAuthError(formatGoogleSignInError(error))
     } finally {
       setIsAuthenticating(false)
     }
-  }, [setIsAuthenticating])
+  }, [setIsAuthenticating, setUser, setBackendToken])
 
   const signOutUser = useCallback(async () => {
-    await forceFullSignOut()
-  }, [])
+    try {
+      await GoogleSignin.signOut()
+    } catch (error) {
+      console.warn('Google sign-out warning:', error)
+    } finally {
+      clearSession()
+    }
+  }, [setBackendToken, setUser])
 
   return { signIn, signOut: signOutUser }
 }

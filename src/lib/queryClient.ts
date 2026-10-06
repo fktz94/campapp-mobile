@@ -6,8 +6,6 @@ export const queryClient = new QueryClient({
     queries: {
       staleTime: 12 * 60 * 60_000,
       gcTime: 7 * 24 * 60 * 60_000,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
       retry: (failureCount, error) => {
         if (error instanceof SheetsError) {
           if (error.code === 'ACCESS_DENIED') return false
