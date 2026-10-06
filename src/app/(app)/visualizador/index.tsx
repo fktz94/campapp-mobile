@@ -3,7 +3,7 @@ import { Screen } from '@/components/ui/Screen'
 import VisualizadorContent from '@/components/visualizador/VisualizadorContent'
 import { VisualizadorFilters } from '@/components/visualizador/VisualizadorFilters'
 import { VIEWS } from '@/constants/views'
-import { VisualizadorProvider, useVisualizadorContext } from '@/contexts/VisualizadorContext'
+import { useVisualizadorContext, VisualizadorProvider } from '@/contexts/VisualizadorContext'
 
 function VisualizadorScreenInner() {
   const { view, setView } = useVisualizadorContext()

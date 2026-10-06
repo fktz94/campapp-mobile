@@ -19,7 +19,7 @@ const Login = () => {
         </View>
       )}
       <Screen centered>
-        <Text style={common.title}>CampApp</Text>
+        <Text style={common.title}>CampoApp</Text>
         <GoogleSigninButton onPress={signIn} />
       </Screen>
     </>

@@ -1,4 +1,3 @@
-// hooks/useFiltersOptions.ts
 import { useMemo } from 'react'
 
 import { buildFiltersOptions } from '@/lib/helpers/visualizadorHelpers'

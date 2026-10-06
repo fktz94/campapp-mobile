@@ -1,15 +1,14 @@
 {
   "expo": {
-    "name": "CampApp",
-    "slug": "campapp",
+    "name": "CampoApp",
+    "slug": "campoapp",
     "version": "0.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "campapp",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "bundleIdentifier": "com.ortiz.campapp",
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "bundleIdentifier": "com.ortiz.campapp"
     },
     "android": {
       "adaptiveIcon": {
@@ -17,13 +16,15 @@
         "foregroundImage": "./assets/images/icon.png"
       },
       "package": "com.ortiz.campapp",
-      "predictiveBackGestureEnabled": false,
-      "googleServicesFile": "./google-services.json"
+      "predictiveBackGestureEnabled": false
     },
     "plugins": [
-      "@react-native-firebase/app",
-      "@react-native-firebase/auth",
-      "@react-native-google-signin/google-signin",
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.25081499532-a3oqvvnccr8avripafo50bnphvuo3662"
+        }
+      ],
       [
         "expo-build-properties",
         {
@@ -39,7 +40,7 @@
         {
           "backgroundColor": "#7a9970",
           "image": "./assets/images/icon.png",
-          "imageWidth": 76
+          "imageWidth": 146
         }
       ]
     ],
