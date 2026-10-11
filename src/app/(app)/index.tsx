@@ -16,6 +16,12 @@ const CARDS: MenuCardListItem[] = [
     icon: 'analytics-outline',
     href: '/visualizador',
   },
+  {
+    description: 'Asistente virtual para consultar lotes, establecimientos y cultivos.',
+    title: 'Chatbot',
+    icon: 'chatbubbles-outline',
+    href: '/chat',
+  },
 ]
 
 export default function HomeScreen() {

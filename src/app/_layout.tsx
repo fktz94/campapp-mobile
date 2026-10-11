@@ -19,10 +19,7 @@ export default function RootLayout() {
   const { hydrated } = useAppStore()
 
   useEffect(() => {
-    GoogleSignin.configure({
-      webClientId: WEB_CLIENT_ID,
-      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-    })
+    GoogleSignin.configure({ webClientId: WEB_CLIENT_ID })
   }, [])
 
   useEffect(() => {

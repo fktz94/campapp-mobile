@@ -1,12 +1,10 @@
 import { useAppStore } from '@/store/app'
 import { clearSession } from '../auth/session'
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'https://campapp-api.onrender.com'
+// const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'https://campapp-api.onrender.com'
 
-//  __DEV__ &&
-//    Platform.OS === 'android'
-//     ? 'http://10.0.2.2:3000'
-//     : 'http://localhost:3000'
+const API_BASE_URL = __DEV__ ? `http://192.168.178.24:3000` : 'https://campapp-api.onrender.com' // device
+// const API_BASE_URL = Platform.OS === 'android' ? 'http://10.0.2.2:3000' : 'http://localhost:3000'  // emulator
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const { backendToken, googleAccessToken } = useAppStore.getState()
