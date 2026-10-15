@@ -8,16 +8,18 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin'
 export const useAuthSync = () => {
   const setBackendToken = useAppStore((s) => s.setBackendToken)
   const setUser = useAppStore((s) => s.setUser)
-  const setHydrated = useAppStore((s) => s.setHydrated)
+  const hydrated = useAppStore((s) => s.hydrated)
+  const setIsAuthReady = useAppStore((s) => s.setIsAuthReady)
   const setGoogleAccessToken = useAppStore((s) => s.setGoogleAccessToken)
 
   useEffect(() => {
+    if (!hydrated) return
     const initSession = async () => {
       const token = useAppStore.getState().backendToken
 
       if (!token) {
         setUser(null)
-        setHydrated(true)
+        setIsAuthReady(true)
         return
       }
 
@@ -36,10 +38,10 @@ export const useAuthSync = () => {
       } catch {
         clearSession()
       } finally {
-        setHydrated(true)
+        setIsAuthReady(true)
       }
     }
 
     initSession()
-  }, [setUser, setHydrated])
+  }, [setUser, setIsAuthReady, hydrated])
 }

@@ -16,19 +16,22 @@ SplashScreen.preventAutoHideAsync()
 export default function RootLayout() {
   useAuthSync()
 
-  const { hydrated } = useAppStore()
+  const isAuthReady = useAppStore((s) => s.isAuthReady)
 
   useEffect(() => {
-    GoogleSignin.configure({ webClientId: WEB_CLIENT_ID })
+    GoogleSignin.configure({
+      webClientId: WEB_CLIENT_ID,
+      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+    })
   }, [])
 
   useEffect(() => {
-    if (hydrated) {
+    if (isAuthReady) {
       SplashScreen.hide()
     }
-  }, [hydrated])
+  }, [isAuthReady])
 
-  if (!hydrated) return null
+  if (!isAuthReady) return null
 
   return (
     <Providers>

@@ -1,8 +1,9 @@
-// app/chat.tsx
 import { Screen } from '@/components/ui/Screen'
+import { TypingIndicator } from '@/components/ui/TypingIndicator'
+import { colors } from '@/constants/theme'
 import { useChat } from '@/hooks/chat/useChat'
 import { useHeaderHeight } from 'expo-router/react-navigation'
-import { useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 import {
   ActivityIndicator,
   FlatList,
@@ -16,10 +17,12 @@ import { KeyboardAvoidingView } from 'react-native-keyboard-controller'
 
 export default function ChatScreen() {
   const headerHeight = useHeaderHeight()
-  const { messages, sendMessage, isSending } = useChat()
-
+  const { messages, sendMessage, isSending, isLoading, isLoadingMoreMessages, loadMoreMessages } =
+    useChat()
   const [inputText, setInputText] = useState('')
-  const flatListRef = useRef<FlatList>(null)
+
+  const invertedMessages = useMemo(() => [...(messages || [])].reverse(), [messages])
+  const isButtonDisabled = isSending || inputText.length === 0 || isLoading
 
   const handleSend = async () => {
     if (!inputText.trim() || isSending) return
@@ -42,28 +45,42 @@ export default function ChatScreen() {
         keyboardVerticalOffset={headerHeight}
       >
         <View style={styles.container}>
-          <FlatList
-            ref={flatListRef}
-            data={messages}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.messageList}
-            renderItem={({ item }) => {
-              const isUser = item.role === 'user'
-              return (
-                <View style={[styles.bubble, isUser ? styles.userBubble : styles.assistantBubble]}>
-                  <Text style={isUser ? styles.userText : styles.assistantText}>{item.text}</Text>
-                </View>
-              )
-            }}
-            onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
-          />
+          {isLoading ? (
+            <ActivityIndicator style={{ margin: 'auto' }} size={'large'} color={colors.primary} />
+          ) : (
+            <FlatList
+              data={invertedMessages}
+              inverted
+              keyExtractor={(item) => item.id}
+              contentContainerStyle={styles.messageList}
+              keyboardShouldPersistTaps="handled"
+              ListFooterComponent={
+                isLoadingMoreMessages ? (
+                  <View style={{ paddingVertical: 16, alignItems: 'center' }}>
+                    <ActivityIndicator size="small" color={colors.primary} />
+                  </View>
+                ) : null
+              }
+              onMomentumScrollBegin={loadMoreMessages}
+              renderItem={({ item }) => {
+                const isUser = item.role === 'user'
+                if (item.text.length === 0)
+                  return isSending ? (
+                    <View style={[styles.bubble, styles.assistantBubble]}>
+                      <TypingIndicator />
+                    </View>
+                  ) : null
+                return (
+                  <View
+                    style={[styles.bubble, isUser ? styles.userBubble : styles.assistantBubble]}
+                  >
+                    <Text style={isUser ? styles.userText : styles.assistantText}>{item.text}</Text>
+                  </View>
+                )
+              }}
+            />
+          )}
         </View>
-        {isSending && (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="small" />
-            <Text style={styles.loadingText}>Pensando...</Text>
-          </View>
-        )}
 
         <View style={styles.inputContainer}>
           <TextInput
@@ -74,11 +91,21 @@ export default function ChatScreen() {
             onSubmitEditing={handleSend}
           />
           <TouchableOpacity
-            style={styles.sendButton}
+            style={[
+              styles.sendButton,
+              { backgroundColor: isButtonDisabled ? colors.borderAccent : '#2e7d32' },
+            ]}
             onPress={handleSend}
-            disabled={isSending || inputText.length === 0}
+            disabled={isButtonDisabled}
           >
-            <Text style={styles.sendButtonText}>Enviar</Text>
+            <Text
+              style={[
+                styles.sendButtonText,
+                { color: isButtonDisabled ? colors.background : '#fff' },
+              ]}
+            >
+              Enviar
+            </Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
@@ -118,11 +145,10 @@ const styles = StyleSheet.create({
   },
   sendButton: {
     marginLeft: 8,
-    backgroundColor: '#2e7d32',
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 8,
     justifyContent: 'center',
   },
-  sendButtonText: { color: '#fff', fontWeight: 'bold' },
+  sendButtonText: { fontWeight: 'bold' },
 })

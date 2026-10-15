@@ -6,6 +6,11 @@ export const queryClient = new QueryClient({
     queries: {
       staleTime: 12 * 60 * 60_000,
       gcTime: 7 * 24 * 60 * 60_000,
+      networkMode: 'offlineFirst',
+      // staleTime: 0,
+      // gcTime: 0,
+      // networkMode: 'always',
+
       retry: (failureCount, error) => {
         if (error instanceof SheetsError) {
           if (error.code === 'ACCESS_DENIED') return false
@@ -27,7 +32,6 @@ export const queryClient = new QueryClient({
         const jitter = Math.random() * 500
         return base + jitter
       },
-      networkMode: 'offlineFirst',
     },
   },
 })
