@@ -3,7 +3,7 @@ import { QUERY_KEYS } from '@/lib/queryKeys'
 import { fetchChatMessages, streamChatMessage, type ChatMessage } from '@/lib/services/chatService'
 import { useAppStore } from '@/store/app'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 export function useChat() {
   const user = useAppStore((s) => s.user)
@@ -20,17 +20,18 @@ export function useChat() {
 
   const USER_MESSAGES_QUERY_KEY = QUERY_KEYS.chatMessages(userEmail)
 
-  const { data, isLoading } = useQuery({
+  const { isLoading } = useQuery({
     queryKey: USER_MESSAGES_QUERY_KEY,
-    queryFn: () => fetchChatMessages(),
+    queryFn: async () => {
+      const res = await fetchChatMessages()
+      if (res?.messages && res.messages.length > 0 && messages.length === 0) {
+        setMessages(res.messages)
+      }
+      return res
+    },
     staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
   })
-
-  useEffect(() => {
-    if (data?.messages) {
-      setMessages(data.messages)
-    }
-  }, [data, setMessages])
 
   const sendMessageMutation = useMutation({
     mutationFn: async (messageText: string) => {
@@ -61,6 +62,7 @@ export function useChat() {
   const loadMoreMessages = async () => {
     if (messages.length === 0 || isLoadingMoreMessages || isLoading || isSending || !hasMore) return
     const oldestMessage = messages[0]
+    console.log('loadMoreMessages')
 
     try {
       setIsLoadingMoreMessages(true)
@@ -90,7 +92,7 @@ export function useChat() {
 
   return {
     messages,
-    isLoading,
+    isLoading: isLoading && messages.length === 0,
     loadMoreMessages,
     sendMessage: sendUserMessage,
     isSending: sendMessageMutation.isPending,

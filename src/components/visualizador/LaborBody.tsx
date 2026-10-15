@@ -32,15 +32,35 @@ const LaborBody = ({ b }: { b: Bloque }) => {
       }
     >
       {productos.length ? (
-        productos.map((p, pi) => (
-          <View key={pi} style={s.prodRow}>
-            <Text style={s.prodNombre}>{p.producto}</Text>
-            <View style={s.prodRight}>
-              <Text style={s.prodDosis}>{fmt(p.dosis)}</Text>
-              <Text style={s.prodUnidad}>{p.unidad || ''}</Text>
+        productos.map((p, pi) => {
+          const bolsas = (p as any).calculoBolsas
+
+          return (
+            <View key={pi} style={s.prodRow}>
+              <Text style={s.prodNombre}>{p.producto}</Text>
+
+              <View style={s.prodRight}>
+                {bolsas ? (
+                  <View style={{ alignItems: 'flex-end' }}>
+                    <Text style={s.prodDosis}>
+                      {bolsas.bolsasPorHa} <Text style={s.prodUnidad}>bolsas/ha</Text>
+                    </Text>
+                    {bolsas.bolsasTotales ? (
+                      <Text style={{ fontSize: font.sm - 2, color: colors.textMuted }}>
+                        Total: {bolsas.bolsasTotales} bolsas
+                      </Text>
+                    ) : null}
+                  </View>
+                ) : (
+                  <>
+                    <Text style={s.prodDosis}>{fmt(p.dosis)}</Text>
+                    <Text style={s.prodUnidad}>{p.unidad || ''}</Text>
+                  </>
+                )}
+              </View>
             </View>
-          </View>
-        ))
+          )
+        })
       ) : (
         <Text style={s.sinInsumos}>Sin insumos registrados</Text>
       )}
