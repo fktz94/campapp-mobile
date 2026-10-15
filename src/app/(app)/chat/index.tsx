@@ -74,7 +74,9 @@ export default function ChatScreen() {
                   <View
                     style={[styles.bubble, isUser ? styles.userBubble : styles.assistantBubble]}
                   >
-                    <Text style={isUser ? styles.userText : styles.assistantText}>{item.text}</Text>
+                    <Text style={isUser ? styles.userText : styles.assistantText}>
+                      {item.text.replace(/\\n/g, '\n')}
+                    </Text>
                   </View>
                 )
               }}

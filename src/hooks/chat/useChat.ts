@@ -24,7 +24,8 @@ export function useChat() {
     queryKey: USER_MESSAGES_QUERY_KEY,
     queryFn: async () => {
       const res = await fetchChatMessages()
-      if (res?.messages && res.messages.length > 0 && messages.length === 0) {
+      const currentMessages = useAppStore.getState().messages
+      if (res?.messages && res.messages.length > 0 && currentMessages.length === 0) {
         setMessages(res.messages)
       }
       return res
@@ -62,7 +63,6 @@ export function useChat() {
   const loadMoreMessages = async () => {
     if (messages.length === 0 || isLoadingMoreMessages || isLoading || isSending || !hasMore) return
     const oldestMessage = messages[0]
-    console.log('loadMoreMessages')
 
     try {
       setIsLoadingMoreMessages(true)
