@@ -27,6 +27,7 @@ export default function AppLayout() {
     >
       <Stack.Screen name="index" options={{ title: 'CampoApp' }} />
       <Stack.Screen name="visualizador" options={{ title: 'Visualizador' }} />
+      <Stack.Screen name="chat" options={{ title: 'Chat' }} />
       <Stack.Screen name="settings" options={{ title: 'Configuración', headerRight: () => null }} />
     </Stack>
   )
