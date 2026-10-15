@@ -3,15 +3,26 @@ import { fetch } from 'expo/fetch'
 
 import { useAppStore } from '@/store/app'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
+import { Platform } from 'react-native'
 import { clearSession } from '../auth/session'
 
-const getDevHost = () => {
-  const hostUri = Constants.expoConfig?.hostUri
-  return hostUri?.split(':')[0] ?? 'localhost'
+const getDevApiUrl = (): string => {
+  const hostUri =
+    Constants.expoConfig?.hostUri ?? Constants.manifest2?.extra?.expoGo?.developer?.extra?.hostUri
+  const hostIp = hostUri?.split(':')[0]
+
+  if (hostIp && hostIp !== 'localhost' && hostIp !== '127.0.0.1') {
+    return `http://${hostIp}:3000`
+  }
+
+  if (Platform.OS === 'android') {
+    return 'http://10.0.2.2:3000'
+  }
+
+  return 'http://localhost:3000'
 }
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'https://campapp-api.onrender.com'
-// const API_BASE_URL = __DEV__ ? `http://${getDevHost()}:3000` : 'https://campapp-api.onrender.com' // device
-// const API_BASE_URL = Platform.OS === 'android' ? 'http://10.0.2.2:3000' : 'http://localhost:3000'  // emulator
+export const API_BASE_URL =
+  process.env.EXPO_PUBLIC_API_URL ?? (__DEV__ ? getDevApiUrl() : 'https://campapp-api.onrender.com')
 
 async function getAuthHeaders(): Promise<Record<string, string>> {
   const { backendToken, setGoogleAccessToken } = useAppStore.getState()

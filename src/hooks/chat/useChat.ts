@@ -16,6 +16,7 @@ export function useChat() {
   const removeMessage = useAppStore((s) => s.removeMessage)
 
   const [isLoadingMoreMessages, setIsLoadingMoreMessages] = useState(false)
+  const [hasMore, setHasMore] = useState(true)
 
   const USER_MESSAGES_QUERY_KEY = QUERY_KEYS.chatMessages(userEmail)
 
@@ -58,12 +59,13 @@ export function useChat() {
   })
   const isSending = sendMessageMutation.isPending
   const loadMoreMessages = async () => {
-    if (messages.length === 0 || isLoadingMoreMessages || isLoading || isSending) return
+    if (messages.length === 0 || isLoadingMoreMessages || isLoading || isSending || !hasMore) return
     const oldestMessage = messages[0]
 
     try {
       setIsLoadingMoreMessages(true)
       const res = await fetchChatMessages(oldestMessage.id)
+      setHasMore(res.hasMore)
       if (res.messages.length > 0) {
         setMessages([...res.messages, ...messages])
       }
