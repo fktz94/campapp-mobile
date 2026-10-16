@@ -86,14 +86,30 @@ async function stream(
 
   const reader = bodyStream.getReader()
   const decoder = new TextDecoder()
+  let buffer = ''
 
   try {
     while (true) {
       const { done, value } = await reader.read()
       if (done) break
-      const decodedChunk = decoder.decode(value, { stream: true })
-      if (decodedChunk) {
-        onChunk(decodedChunk)
+
+      buffer += decoder.decode(value, { stream: true })
+      const lines = buffer.split('\n\n')
+      buffer = lines.pop() ?? ''
+
+      for (const line of lines) {
+        const trimmed = line.trim()
+        if (trimmed.startsWith('data:')) {
+          const jsonStr = trimmed.replace('data:', '').trim()
+          try {
+            const parsedText = JSON.parse(jsonStr)
+            if (parsedText) {
+              onChunk(parsedText)
+            }
+          } catch {
+            onChunk(jsonStr)
+          }
+        }
       }
     }
   } finally {
