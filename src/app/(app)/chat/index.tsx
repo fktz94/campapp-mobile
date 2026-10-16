@@ -50,6 +50,7 @@ export default function ChatScreen() {
           ) : (
             <FlatList
               data={invertedMessages}
+              extraData={messages}
               inverted
               keyExtractor={(item) => item.id}
               contentContainerStyle={styles.messageList}

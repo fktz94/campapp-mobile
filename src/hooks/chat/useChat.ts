@@ -12,7 +12,6 @@ export function useChat() {
   const messages = useAppStore((s) => s.messages)
   const setMessages = useAppStore((s) => s.setMessages)
   const addMessage = useAppStore((s) => s.addMessage)
-  const appendToMessage = useAppStore((s) => s.appendToMessage)
   const removeMessage = useAppStore((s) => s.removeMessage)
 
   const [isLoadingMoreMessages, setIsLoadingMoreMessages] = useState(false)
@@ -39,14 +38,16 @@ export function useChat() {
       const id = `assistant_${Date.now()}`
       addMessage({ id, role: 'assistant', text: '' })
       try {
-        await streamChatMessage(messageText, (chunk) => appendToMessage(id, chunk))
+        await streamChatMessage(messageText, (chunk) => {
+          useAppStore.getState().appendToMessage(id, chunk)
+        })
       } catch (error) {
         removeMessage(id)
         throw error
       }
     },
     onError: (error: unknown) => {
-      console.error('Error al enviar mensaje:', error)
+      console.error('Error al enviar mensaje (onError):', error)
       const errorMessage =
         error instanceof Error ? error.message : 'Error desconocido al enviar el mensaje'
 
@@ -59,6 +60,7 @@ export function useChat() {
       }
     },
   })
+
   const isSending = sendMessageMutation.isPending
   const loadMoreMessages = async () => {
     if (messages.length === 0 || isLoadingMoreMessages || isLoading || isSending || !hasMore) return

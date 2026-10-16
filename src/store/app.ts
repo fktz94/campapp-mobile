@@ -61,9 +61,15 @@ export const useAppStore = create<AppState>()(
 
       addMessage: (message) => set((state) => ({ messages: [...state.messages, message] })),
       appendToMessage: (id: string, chunk: string) =>
-        set((s) => ({
-          messages: s.messages.map((m) => (m.id === id ? { ...m, text: m.text + chunk } : m)),
-        })),
+        set((state) => {
+          const newMessages = state.messages.map((m) => {
+            if (m.id === id) {
+              return { ...m, text: m.text + chunk }
+            }
+            return m
+          })
+          return { messages: [...newMessages] }
+        }),
       setBackendToken: (backendToken) => set({ backendToken }),
       setCampania: (campania) => set({ campania }),
       setEstablecimiento: (establecimiento) => set({ establecimiento }),
