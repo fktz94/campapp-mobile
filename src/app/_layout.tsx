@@ -36,7 +36,7 @@ export default function RootLayout() {
   return (
     <Providers>
       <StatusBar barStyle={'dark-content'} />
-      <Stack screenOptions={{ headerShown: false }} />
+      <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right' }} />
       <Toast />
     </Providers>
   )

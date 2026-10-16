@@ -23,6 +23,7 @@ export default function AppLayout() {
           </AnimatedPressable>
         ),
         headerBackButtonDisplayMode: 'minimal',
+        animation: 'slide_from_right',
       }}
     >
       <Stack.Screen name="index" options={{ title: 'CampoApp' }} />

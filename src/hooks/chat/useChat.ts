@@ -23,14 +23,21 @@ export function useChat() {
     queryKey: USER_MESSAGES_QUERY_KEY,
     queryFn: async () => {
       const res = await fetchChatMessages()
-      const currentMessages = useAppStore.getState().messages
-      if (res?.messages && res.messages.length > 0 && currentMessages.length === 0) {
-        setMessages(res.messages)
+      if (res?.messages && res.messages.length > 0) {
+        const serverMessages = res.messages
+        const currentMessages = useAppStore.getState().messages
+
+        const messageMap = new Map(currentMessages.map((m) => [m.id, m]))
+        serverMessages.forEach((m) => messageMap.set(m.id, m))
+
+        const mergedMessages = Array.from(messageMap.values())
+        setMessages(mergedMessages)
       }
       return res
     },
-    staleTime: 1000 * 60 * 5,
-    refetchOnWindowFocus: false,
+    staleTime: 1000 * 30,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   })
 
   const sendMessageMutation = useMutation({
